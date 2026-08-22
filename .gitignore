@@ -1,0 +1,10 @@
+# Hugo build output and local locks
+/public/
+/resources/_gen/
+.hugo_build.lock
+
+# Editor and operating-system metadata
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,60 @@
+{{- with site.Params.homeInfoParams }}
+<section class="first-entry home-info editorial-hero" aria-labelledby="hero-title">
+    <div class="hero-grid" aria-hidden="true"></div>
+    <div class="hero-copy">
+        <p class="hero-eyebrow">{{ .Eyebrow }}</p>
+        <h1 id="hero-title">
+            <span class="hero-title-line">{{ .TitleLead }}<em>{{ .TitleAccent }}</em></span>
+            <span class="hero-title-line">{{ .TitleTail }}</span>
+        </h1>
+        <div class="hero-description md-content">
+            {{ $opts := dict "display" "block" }}
+            {{ .Content | $.Page.RenderString $opts }}
+        </div>
+        <div class="hero-actions">
+            <a class="hero-button hero-button-primary" href="{{ .PrimaryURL | relLangURL }}">
+                <span>{{ .PrimaryLabel }}</span>
+                <span aria-hidden="true">↗</span>
+            </a>
+            <a class="hero-button hero-button-secondary" href="{{ .SecondaryURL | relLangURL }}">
+                <span>{{ .SecondaryLabel }}</span>
+                <span aria-hidden="true">→</span>
+            </a>
+        </div>
+    </div>
+
+    <aside class="hero-aside" aria-label="博客信息">
+        <span class="hero-index">01</span>
+        <dl class="hero-facts">
+            <div>
+                <dt>FIELD</dt>
+                <dd>{{ .Field }}</dd>
+            </div>
+            <div>
+                <dt>STATUS</dt>
+                <dd><span class="status-dot" aria-hidden="true"></span>{{ .Status }}</dd>
+            </div>
+            <div>
+                <dt>SINCE</dt>
+                <dd>{{ .Since }}</dd>
+            </div>
+        </dl>
+        <p class="hero-manifesto" aria-hidden="true">
+            <span>THINK</span>
+            <span>MAKE</span>
+            <span>WRITE</span>
+        </p>
+        <div class="hero-social">
+            {{ partial "social_icons.html" (dict "align" site.Params.homeInfoParams.AlignSocialIconsTo) }}
+        </div>
+    </aside>
+</section>
+
+<header class="feed-heading">
+    <div>
+        <span class="section-index">02</span>
+        <h2>最近文章</h2>
+    </div>
+    <a href="{{ "/posts/" | relLangURL }}">查看全部 <span aria-hidden="true">→</span></a>
+</header>
+{{- end -}}

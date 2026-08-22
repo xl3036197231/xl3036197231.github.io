@@ -1,0 +1,44 @@
+{{- define "main" }}
+
+{{- if .Title }}
+<header class="page-header">
+    <p class="page-eyebrow">INDEX / {{ upper .Type }}</p>
+    <h1>{{ .Title }}</h1>
+    {{- if .Description }}
+    <div class="post-description">
+        {{ .Description }}
+    </div>
+    {{- end }}
+</header>
+{{- end }}
+
+{{- $type := .Type }}
+{{- $terms := .Data.Terms.Alphabetical }}
+{{- if gt (len $terms) 0 }}
+<ul class="terms-directory" aria-label="{{ .Title }}目录">
+    {{- range $terms }}
+        {{- $name := .Name }}
+        {{- $count := .Count }}
+        {{- with site.GetPage (printf "/%s/%s" $type $name) }}
+    <li>
+        <a href="{{ .Permalink }}">
+            <span class="term-name">{{ .LinkTitle }}</span>
+            <span class="term-count" aria-label="{{ $count }} 篇文章">{{ printf "%02d" $count }}</span>
+            <span class="term-arrow" aria-hidden="true">↗</span>
+        </a>
+    </li>
+        {{- end }}
+    {{- end }}
+</ul>
+{{- else }}
+<section class="empty-state" aria-labelledby="empty-state-title">
+    <p class="empty-state-index">NO / ENTRIES YET</p>
+    <h2 id="empty-state-title">分类还在生长中。</h2>
+    <p>文章会先从标签开始整理，内容积累到合适的规模后，再形成更清晰的主题分类。</p>
+    <a class="hero-button hero-button-secondary" href="{{ "/posts/" | relLangURL }}">
+        先读最新文章 <span aria-hidden="true">→</span>
+    </a>
+</section>
+{{- end }}
+
+{{- end }}

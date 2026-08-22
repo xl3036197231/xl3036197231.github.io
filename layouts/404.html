@@ -1,0 +1,14 @@
+{{- define "main" }}
+<section class="not-found" aria-labelledby="not-found-title">
+    <p class="not-found-code" aria-hidden="true">404</p>
+    <div class="not-found-copy">
+        <p class="not-found-eyebrow">PAGE / NOT FOUND</p>
+        <h1 id="not-found-title">这页走丢了。</h1>
+        <p>链接可能已经改变，也可能从未存在。你可以回到首页，或者继续阅读文章。</p>
+        <div class="not-found-actions">
+            <a class="hero-button hero-button-primary" href="{{ "/" | relLangURL }}">返回首页 <span aria-hidden="true">→</span></a>
+            <a class="hero-button hero-button-secondary" href="{{ "/posts/" | relLangURL }}">浏览文章 <span aria-hidden="true">↗</span></a>
+        </div>
+    </div>
+</section>
+{{- end }}

@@ -1,0 +1,96 @@
+baseURL: "https://xl3036197231.github.io/"
+locale: "zh-CN"
+defaultContentLanguage: "zh"
+title: "小星的数字花园"
+copyright: "迷惘的小星"
+
+theme:
+ - PaperMod
+
+enableRobotsTXT: true
+
+params:
+  env: production
+  title: "小星的数字花园"
+  description: "记录代码、学习、生活，以及那些尚未想明白的问题。"
+  author: "迷惘的小星"
+  keywords:
+    - 技术博客
+    - 编程
+    - 学习笔记
+    - 生活随笔
+  images:
+    - "/og.png"
+
+  defaultTheme: auto
+  disableThemeToggle: false
+  mainSections:
+    - posts
+  DateFormat: "2006.01.02"
+
+  ShowReadingTime: true
+  ShowWordCount: true
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: true
+  ShowCodeCopyButtons: true
+  ShowRssButtonInSectionTermList: true
+
+  label:
+    text: "小星 / X."
+
+  homeInfoParams:
+    Eyebrow: "XIAOXING / NOTES & BUILDS"
+    TitleLead: "构建、"
+    TitleAccent: "记录"
+    TitleTail: "偶尔迷路。"
+    Content: "这里收集代码、学习笔记与生活片段。把复杂的事情讲清楚，也给尚未想明白的问题留一个位置。"
+    PrimaryLabel: "开始阅读"
+    PrimaryURL: "/posts/"
+    SecondaryLabel: "关于小星"
+    SecondaryURL: "/about/"
+    Field: "Web · AI · Life"
+    Status: "持续更新"
+    Since: "2026"
+
+  socialIcons:
+    - name: github
+      url: "https://github.com/xl3036197231"
+
+  footer:
+    text: "在代码与生活之间，保持好奇。"
+
+  assets:
+    favicon: "/favicon.svg"
+    favicon16x16: "/favicon-16x16.png"
+    favicon32x32: "/favicon-32x32.png"
+    apple_touch_icon: "/apple-touch-icon.png"
+    safari_pinned_tab: "/favicon.svg"
+    theme_color: "#FAFAFA"
+    msapplication_TileColor: "#FAFAFA"
+
+menu:
+  main:
+    - identifier: posts
+      name: "文章"
+      url: "/posts/"
+      weight: 10
+
+    - identifier: archives
+      name: "归档"
+      url: "/archives/"
+      weight: 20
+
+    - identifier: tags
+      name: "标签"
+      url: "/tags/"
+      weight: 30
+
+    - identifier: friends
+      name: "友链"
+      url: "/friends/"
+      weight: 40
+
+    - identifier: about
+      name: "关于"
+      url: "/about/"
+      weight: 50
