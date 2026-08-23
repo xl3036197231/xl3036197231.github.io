@@ -1,0 +1,24 @@
+{{- $src := .Get "src" -}}
+{{- $title := .Get "title" | default "PDF 文档" -}}
+{{- $height := .Get "height" | default "720px" -}}
+
+{{- if $src -}}
+<figure class="pdf-viewer">
+    <figcaption class="pdf-viewer-toolbar">
+        <div class="pdf-viewer-heading">
+            <span class="pdf-viewer-label">PDF / READING</span>
+            <strong class="pdf-viewer-title">{{ $title }}</strong>
+        </div>
+        <div class="pdf-viewer-actions">
+            <a href="{{ $src | relURL }}" target="_blank" rel="noopener">在新窗口打开 <span aria-hidden="true">↗</span></a>
+            <a href="{{ $src | relURL }}" download>下载 PDF <span aria-hidden="true">↓</span></a>
+        </div>
+    </figcaption>
+    <div class="pdf-viewer-frame" style="--pdf-height: {{ $height | safeCSS }};">
+        <iframe src="{{ $src | relURL }}" title="在页面中阅读：{{ $title }}" loading="lazy" referrerpolicy="no-referrer"></iframe>
+    </div>
+    <p class="pdf-viewer-fallback">如果内嵌阅读器未加载，<a href="{{ $src | relURL }}" target="_blank" rel="noopener">请在新窗口打开 PDF</a>。</p>
+</figure>
+{{- else -}}
+<p class="pdf-viewer-error" role="alert">PDF 阅读器缺少文件地址，请使用 <code>src</code> 指定 `static/pdfs/` 下的文件。</p>
+{{- end -}}

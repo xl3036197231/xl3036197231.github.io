@@ -21,3 +21,13 @@ hugo --cleanDestinationDir --gc --minify --panicOnWarning
 ## 发布
 
 推送至 `main` 会触发 `.github/workflows/deploy-pages.yml`，自动构建并部署到 GitHub Pages。
+
+## 在文章中嵌入 PDF
+
+将 PDF 文件放到 `static/pdfs/` 目录，然后在 Markdown 文章中使用 `pdf` shortcode：
+
+```markdown
+{{< pdf src="/pdfs/your-document.pdf" title="文档标题" height="720px" >}}
+```
+
+`title` 和 `height` 都是可选的。阅读器会提供页面内预览、在新窗口打开和下载入口。
