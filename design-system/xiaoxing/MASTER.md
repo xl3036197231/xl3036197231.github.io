@@ -40,7 +40,8 @@
 
 ### Typography
 
-- **Heading Font:** Libre Bodoni
+- **Heading Font:** Public Sans (Bold 700)
+- **Display Accent:** Libre Bodoni (logo and manifesto)
 - **Body Font:** Public Sans
 - **Mood:** magazine, editorial, publishing, refined, journalism, print
 - **Delivery:** Self-hosted WOFF2 files under `/static/fonts/`; do not add Google Fonts network requests.

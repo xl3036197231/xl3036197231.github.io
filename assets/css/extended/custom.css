@@ -47,6 +47,8 @@
     --accent-ink: #ffffff;
     --spectrum: #7c3aed;
     --display-font: "Libre Bodoni", "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, serif;
+    --heading-font: "Public Sans", "Noto Sans SC", "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+    --heading-weight: 700;
     --body-font: "Public Sans", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
     color-scheme: light;
 }
@@ -377,9 +379,9 @@ button:focus-visible {
 .editorial-hero h1 {
     max-width: 820px;
     margin: 0;
-    font-family: var(--display-font);
+    font-family: var(--heading-font);
     font-size: clamp(56px, 7.2vw, 104px);
-    font-weight: 500;
+    font-weight: var(--heading-weight);
     line-height: 0.96;
     letter-spacing: -0.055em;
     text-wrap: nowrap;
@@ -553,9 +555,9 @@ button:focus-visible {
 
 .feed-heading h2 {
     margin: 0;
-    font-family: var(--display-font);
+    font-family: var(--heading-font);
     font-size: clamp(34px, 4vw, 52px);
-    font-weight: 500;
+    font-weight: var(--heading-weight);
     line-height: 1;
     letter-spacing: -0.035em;
 }
@@ -667,9 +669,9 @@ button:focus-visible {
 .category-card-title {
     max-width: 12ch;
     margin-top: 14px;
-    font-family: var(--display-font);
+    font-family: var(--heading-font);
     font-size: clamp(25px, 2.4vw, 36px);
-    font-weight: 500;
+    font-weight: var(--heading-weight);
     line-height: 1.05;
     letter-spacing: -0.035em;
 }
@@ -724,9 +726,9 @@ button:focus-visible {
 
 .category-page-heading h2 {
     margin: 0;
-    font-family: var(--display-font);
+    font-family: var(--heading-font);
     font-size: clamp(34px, 4.5vw, 58px);
-    font-weight: 500;
+    font-weight: var(--heading-weight);
     line-height: 1;
     letter-spacing: -0.04em;
 }
@@ -814,9 +816,9 @@ button:focus-visible {
 }
 
 .entry-header h2 {
-    font-family: var(--display-font);
+    font-family: var(--heading-font);
     font-size: clamp(28px, 3vw, 42px);
-    font-weight: 500;
+    font-weight: var(--heading-weight);
     line-height: 1.16;
     letter-spacing: -0.025em;
 }
@@ -844,9 +846,9 @@ button:focus-visible {
 .page-header h1,
 .post-title {
     max-width: 940px;
-    font-family: var(--display-font);
+    font-family: var(--heading-font);
     font-size: clamp(46px, 6vw, 82px);
-    font-weight: 500;
+    font-weight: var(--heading-weight);
     line-height: 1.05;
     letter-spacing: -0.045em;
     text-wrap: balance;
@@ -995,9 +997,9 @@ button:focus-visible {
 
 .empty-state h2 {
     margin: 0;
-    font-family: var(--display-font);
+    font-family: var(--heading-font);
     font-size: clamp(38px, 5vw, 66px);
-    font-weight: 500;
+    font-weight: var(--heading-weight);
     line-height: 1;
     letter-spacing: -0.04em;
 }
@@ -1032,8 +1034,8 @@ button:focus-visible {
 .post-content h1,
 .post-content h2,
 .post-content h3 {
-    font-family: var(--display-font);
-    font-weight: 500;
+    font-family: var(--heading-font);
+    font-weight: var(--heading-weight);
     letter-spacing: -0.02em;
 }
 
@@ -1254,9 +1256,9 @@ details.toc {
 
 .not-found h1 {
     margin: 0;
-    font-family: var(--display-font);
+    font-family: var(--heading-font);
     font-size: clamp(48px, 6vw, 82px);
-    font-weight: 500;
+    font-weight: var(--heading-weight);
     line-height: 1;
     letter-spacing: -0.045em;
 }
