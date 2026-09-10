@@ -44,18 +44,18 @@
 
     const rebuildParticles = () => {
         const night = isDark();
-        const minimum = night ? 26 : 36;
-        const maximum = night ? 54 : 78;
-        const count = Math.min(maximum, Math.max(minimum, Math.round(width / (night ? 28 : 18))));
+        const minimum = night ? 32 : 48;
+        const maximum = night ? 68 : 110;
+        const count = Math.min(maximum, Math.max(minimum, Math.round(width / (night ? 24 : 14))));
 
         particles = Array.from({ length: count }, () => ({
             x: Math.random() * width,
             y: Math.random() * height,
-            radius: night ? Math.random() * 1.4 + 0.35 : Math.random() * 2.4 + 0.7,
-            speed: night ? Math.random() * 0.08 + 0.02 : Math.random() * 0.45 + 0.18,
+            radius: night ? Math.random() * 1.8 + 0.5 : Math.random() * 3.2 + 1.1,
+            speed: night ? Math.random() * 0.10 + 0.03 : Math.random() * 0.55 + 0.24,
             drift: Math.random() * 0.6 + 0.2,
             phase: Math.random() * Math.PI * 2,
-            alpha: night ? Math.random() * 0.45 + 0.18 : Math.random() * 0.3 + 0.18
+            alpha: night ? Math.random() * 0.48 + 0.22 : Math.random() * 0.32 + 0.24
         }));
     };
 
@@ -140,5 +140,52 @@
         attributes: true,
         attributeFilter: ['data-theme']
     });
+})();
+</script>
+
+<script>
+(() => {
+    const cursor = document.querySelector('.category-cursor');
+    const pointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    if (!cursor || !pointerQuery.matches || motionQuery.matches) {
+        return;
+    }
+
+    let targetX = -80;
+    let targetY = -80;
+    let currentX = targetX;
+    let currentY = targetY;
+    let frameId = 0;
+
+    const followPointer = () => {
+        currentX += (targetX - currentX) * 0.18;
+        currentY += (targetY - currentY) * 0.18;
+        cursor.style.setProperty('--cursor-x', currentX + 'px');
+        cursor.style.setProperty('--cursor-y', currentY + 'px');
+
+        if (Math.abs(targetX - currentX) > 0.2 || Math.abs(targetY - currentY) > 0.2) {
+            frameId = window.requestAnimationFrame(followPointer);
+        } else {
+            frameId = 0;
+        }
+    };
+
+    const movePointer = (event) => {
+        targetX = event.clientX;
+        targetY = event.clientY;
+        cursor.classList.add('is-active');
+
+        if (!frameId) {
+            frameId = window.requestAnimationFrame(followPointer);
+        }
+    };
+
+    const hideCursor = () => cursor.classList.remove('is-active');
+
+    window.addEventListener('pointermove', movePointer, { passive: true });
+    window.addEventListener('blur', hideCursor);
+    document.documentElement.addEventListener('mouseleave', hideCursor);
 })();
 </script>

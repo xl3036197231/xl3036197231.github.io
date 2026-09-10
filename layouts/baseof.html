@@ -20,15 +20,25 @@
     {{- $head | safeHTML }}
 </head>
 
-{{- if (or (ne .Kind `page` ) (eq .Layout `archives`) (eq .Layout `search`)) }}
-<body class="list" id="top">
-{{- else }}
-<body id="top">
-{{- end }}
+{{- $isList := or (ne .Kind `page` ) (eq .Layout `archives`) (eq .Layout `search`) }}
+{{- $isCategoryTerm := and (eq .Kind "term") (eq .Type "categories") }}
+<body{{ if $isList }} class="list{{ if $isCategoryTerm }} category-term-page{{ end }}"{{ else if $isCategoryTerm }} class="category-term-page"{{ end }} id="top">
     <div class="ambient-sky" aria-hidden="true">
         <div class="ambient-moon"></div>
         <canvas id="ambient-canvas"></canvas>
     </div>
+    {{- if $isCategoryTerm }}
+    <div class="category-cursor" aria-hidden="true">
+        <svg class="cursor-icon cursor-snowflake" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+            <path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1" />
+            <path d="m12 2-1.7 2.8M12 2l1.7 2.8M12 22l-1.7-2.8M12 22l1.7-2.8M2 12l2.8-1.7M2 12l2.8 1.7M22 12l-2.8-1.7M22 12l-2.8 1.7" />
+        </svg>
+        <svg class="cursor-icon cursor-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round">
+            <path d="m12 2 2.6 6.4L21 11l-6.4 2.6L12 20l-2.6-6.4L3 11l6.4-2.6L12 2Z" />
+            <path d="M19 3v4M17 5h4" stroke-linecap="round" />
+        </svg>
+    </div>
+    {{- end }}
     <a class="skip-link" href="#main-content">跳到主要内容</a>
     {{ partialCached "header.html" . .Page -}}
     <main class="main" id="main-content" tabindex="-1">
