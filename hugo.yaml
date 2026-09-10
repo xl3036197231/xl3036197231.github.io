@@ -12,13 +12,33 @@ enableRobotsTXT: true
 params:
   env: production
   title: "小星的数字花园"
-  description: "记录代码、学习、生活，以及那些尚未想明白的问题。"
+  description: "记录学业、靶机、CTF 题解与 CTF 知识点笔记，以及那些尚未想明白的问题。"
   author: "迷惘的小星"
   keywords:
     - 技术博客
     - 编程
-    - 学习笔记
-    - 生活随笔
+    - 学业
+    - 靶机
+    - CTF 题解
+    - CTF 知识点笔记
+
+  blogCategories:
+    - name: "学业"
+      code: "01"
+      label: "ACADEMIC"
+      description: "课程、备考与值得长期积累的学习记录。"
+    - name: "靶机"
+      code: "02"
+      label: "LAB / BOX"
+      description: "从信息收集到漏洞验证，记录靶场里的完整过程。"
+    - name: "CTF 题解"
+      code: "03"
+      label: "CTF / WRITE-UP"
+      description: "把比赛和练习中的解题思路拆开，留下可复盘的线索。"
+    - name: "CTF 知识点笔记"
+      code: "04"
+      label: "CTF / NOTES"
+      description: "整理工具、原理与常见题型，建立自己的知识索引。"
   images:
     - "/og.png"
 
@@ -43,12 +63,12 @@ params:
     TitleLead: "构建、"
     TitleAccent: "记录"
     TitleTail: "偶尔迷路。"
-    Content: "这里收集代码、学习笔记与生活片段。把复杂的事情讲清楚，也给尚未想明白的问题留一个位置。"
+    Content: "这里按学业、靶机、CTF 题解与 CTF 知识点笔记整理记录。把复杂的事情讲清楚，也给尚未想明白的问题留一个位置。"
     PrimaryLabel: "开始阅读"
     PrimaryURL: "/posts/"
     SecondaryLabel: "关于小星"
     SecondaryURL: "/about/"
-    Field: "Web · AI · Life"
+    Field: "CTF · Web · Study"
     Status: "持续更新"
     Since: "2026"
 
@@ -75,22 +95,27 @@ menu:
       url: "/posts/"
       weight: 10
 
+    - identifier: categories
+      name: "分类"
+      url: "/categories/"
+      weight: 20
+
     - identifier: archives
       name: "归档"
       url: "/archives/"
-      weight: 20
+      weight: 30
 
     - identifier: tags
       name: "标签"
       url: "/tags/"
-      weight: 30
+      weight: 40
 
     - identifier: friends
       name: "友链"
       url: "/friends/"
-      weight: 40
+      weight: 50
 
     - identifier: about
       name: "关于"
       url: "/about/"
-      weight: 50
+      weight: 60

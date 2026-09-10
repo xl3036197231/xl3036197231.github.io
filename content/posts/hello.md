@@ -5,6 +5,8 @@ draft: false
 tags:
   - 博客
   - 随笔
+categories:
+  - 学业
 ---
 
 你好，这里是我的个人博客。

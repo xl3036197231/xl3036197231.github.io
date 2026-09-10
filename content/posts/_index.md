@@ -1,4 +1,4 @@
 ---
 title: "文章"
-description: "技术、学习与生活的持续记录。"
+description: "学业、靶机、CTF 题解与 CTF 知识点笔记的持续记录。"
 ---

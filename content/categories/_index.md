@@ -1,4 +1,5 @@
 ---
 title: "分类"
-description: "按照主题浏览文章。"
+description: "沿着四条主线，找到适合现在的阅读入口。"
+layout: "categories"
 ---

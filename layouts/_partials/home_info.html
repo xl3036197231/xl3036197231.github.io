@@ -50,9 +50,20 @@
     </aside>
 </section>
 
+<section class="category-overview" aria-labelledby="category-overview-title">
+    <header class="feed-heading category-heading">
+        <div>
+            <span class="section-index">02</span>
+            <h2 id="category-overview-title">按分类阅读</h2>
+        </div>
+        <a href="{{ "/categories/" | relLangURL }}">完整分类 <span aria-hidden="true">→</span></a>
+    </header>
+    {{ partial "category_cards.html" (dict "mode" "home") }}
+</section>
+
 <header class="feed-heading">
     <div>
-        <span class="section-index">02</span>
+        <span class="section-index">03</span>
         <h2>最近文章</h2>
     </div>
     <a href="{{ "/posts/" | relLangURL }}">查看全部 <span aria-hidden="true">→</span></a>

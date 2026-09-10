@@ -1,0 +1,22 @@
+{{- define "main" }}
+
+<header class="page-header">
+    <p class="page-eyebrow">INDEX / CATEGORIES</p>
+    <h1>{{ .Title }}</h1>
+    {{- if .Description }}
+    <div class="post-description">
+        {{ .Description }}
+    </div>
+    {{- end }}
+</header>
+
+<section class="category-page" aria-labelledby="category-page-title">
+    <div class="category-page-heading">
+        <span class="section-index">FOUR DIRECTIONS</span>
+        <h2 id="category-page-title">先选一个方向，再慢慢深入。</h2>
+        <p>分类是这座数字花园的骨架。文章会随着积累逐渐填满每一个入口。</p>
+    </div>
+    {{ partial "category_cards.html" (dict "mode" "page") }}
+</section>
+
+{{- end }}

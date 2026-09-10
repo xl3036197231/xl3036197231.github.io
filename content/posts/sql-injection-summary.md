@@ -9,7 +9,7 @@ tags:
   - CTF
   - Web 安全
 categories:
-  - 学习笔记
+  - CTF 知识点笔记
 ShowToc: true
 TocOpen: false
 ---

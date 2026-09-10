@@ -1,0 +1,23 @@
+<div class="category-grid{{ with .mode }} category-grid-{{ . }}{{ end }}" aria-label="博客分类目录">
+    {{- range site.Params.blogCategories }}
+        {{- $term := index site.Taxonomies.categories .name }}
+        {{- if $term }}
+    <a class="category-card" href="{{ printf "/categories/%s/" .name | relLangURL }}" aria-label="浏览{{ .name }}分类，共 {{ len $term }} 篇文章">
+        {{- else }}
+    <div class="category-card is-empty" aria-label="{{ .name }}分类，暂时没有文章">
+        {{- end }}
+        <span class="category-card-index">{{ .code }}</span>
+        <span class="category-card-label">{{ .label }}</span>
+        <strong class="category-card-title">{{ .name }}</strong>
+        <p class="category-card-description">{{ .description }}</p>
+        <span class="category-card-meta">
+            {{- if $term }}{{ len $term }} 篇文章{{ else }}待收录{{ end }}
+            <span aria-hidden="true">{{ if $term }}↗{{ else }}·{{ end }}</span>
+        </span>
+        {{- if $term }}
+    </a>
+        {{- else }}
+    </div>
+        {{- end }}
+    {{- end }}
+</div>
