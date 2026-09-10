@@ -11,3 +11,134 @@
         });
     }
 </script>
+
+<script>
+(() => {
+    const canvas = document.getElementById('ambient-canvas');
+    const root = document.documentElement;
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    if (!canvas) {
+        return;
+    }
+
+    const context = canvas.getContext('2d');
+    let width = 0;
+    let height = 0;
+    let devicePixelRatio = 1;
+    let particles = [];
+    let frameId = 0;
+    let lastTime = 0;
+
+    const isDark = () => root.dataset.theme === 'dark';
+
+    const resizeCanvas = () => {
+        devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = Math.floor(width * devicePixelRatio);
+        canvas.height = Math.floor(height * devicePixelRatio);
+        context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+        rebuildParticles();
+    };
+
+    const rebuildParticles = () => {
+        const night = isDark();
+        const minimum = night ? 26 : 36;
+        const maximum = night ? 54 : 78;
+        const count = Math.min(maximum, Math.max(minimum, Math.round(width / (night ? 28 : 18))));
+
+        particles = Array.from({ length: count }, () => ({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            radius: night ? Math.random() * 1.4 + 0.35 : Math.random() * 2.4 + 0.7,
+            speed: night ? Math.random() * 0.08 + 0.02 : Math.random() * 0.45 + 0.18,
+            drift: Math.random() * 0.6 + 0.2,
+            phase: Math.random() * Math.PI * 2,
+            alpha: night ? Math.random() * 0.45 + 0.18 : Math.random() * 0.3 + 0.18
+        }));
+    };
+
+    const render = (time) => {
+        if (document.hidden) {
+            frameId = 0;
+            return;
+        }
+
+        const delta = Math.min((time - lastTime) / 16.67 || 1, 2);
+        lastTime = time;
+        const night = isDark();
+
+        context.clearRect(0, 0, width, height);
+
+        particles.forEach((particle) => {
+            particle.y += particle.speed * delta;
+            particle.x += Math.sin(time * 0.00045 + particle.phase) * particle.drift * delta;
+
+            if (particle.y > height + 12) {
+                particle.y = -12;
+                particle.x = Math.random() * width;
+            }
+
+            if (particle.x > width + 12) {
+                particle.x = -12;
+            } else if (particle.x < -12) {
+                particle.x = width + 12;
+            }
+
+            const shimmer = night
+                ? particle.alpha * (0.72 + Math.sin(time * 0.0012 + particle.phase) * 0.28)
+                : particle.alpha;
+
+            context.beginPath();
+            context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+            context.fillStyle = night
+                ? 'rgba(226, 232, 240, ' + shimmer + ')'
+                : 'rgba(148, 163, 184, ' + shimmer + ')';
+            context.fill();
+        });
+
+        frameId = window.requestAnimationFrame(render);
+    };
+
+    const start = () => {
+        if (!motionQuery.matches && !frameId) {
+            lastTime = performance.now();
+            frameId = window.requestAnimationFrame(render);
+        }
+    };
+
+    const pause = () => {
+        if (frameId) {
+            window.cancelAnimationFrame(frameId);
+            frameId = 0;
+        }
+    };
+
+    resizeCanvas();
+    start();
+
+    window.addEventListener('resize', resizeCanvas, { passive: true });
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            pause();
+        } else {
+            start();
+        }
+    });
+
+    motionQuery.addEventListener?.('change', () => {
+        if (motionQuery.matches) {
+            pause();
+            context.clearRect(0, 0, width, height);
+        } else {
+            start();
+        }
+    });
+
+    new MutationObserver(rebuildParticles).observe(root, {
+        attributes: true,
+        attributeFilter: ['data-theme']
+    });
+})();
+</script>

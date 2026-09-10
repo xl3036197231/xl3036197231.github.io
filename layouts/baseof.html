@@ -25,6 +25,10 @@
 {{- else }}
 <body id="top">
 {{- end }}
+    <div class="ambient-sky" aria-hidden="true">
+        <div class="ambient-moon"></div>
+        <canvas id="ambient-canvas"></canvas>
+    </div>
     <a class="skip-link" href="#main-content">跳到主要内容</a>
     {{ partialCached "header.html" . .Page -}}
     <main class="main" id="main-content" tabindex="-1">
