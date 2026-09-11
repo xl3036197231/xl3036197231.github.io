@@ -1,0 +1,78 @@
+{{- $posts := where site.RegularPages "Section" "posts" -}}
+{{- $sortedPosts := sort $posts "Date" "desc" -}}
+{{- $tags := site.Taxonomies.tags.Alphabetical -}}
+
+<aside class="home-sidebar" aria-label="秘密花园侧栏">
+    <section class="sidebar-panel sidebar-note">
+        <span class="sidebar-label">A SMALL NOTE</span>
+        <div class="sidebar-note-mark" aria-hidden="true">✳</div>
+        <p>这里不急着把一切说完。每一篇记录，都是给未来的小星留的一张纸条。</p>
+        <span class="sidebar-note-signature">— 小星</span>
+    </section>
+
+    <section class="sidebar-panel sidebar-index" aria-labelledby="sidebar-category-title">
+        <div class="sidebar-panel-heading">
+            <span class="sidebar-label">INDEX / 01</span>
+            <h2 id="sidebar-category-title">分区索引</h2>
+        </div>
+        <div class="sidebar-category-list">
+            {{- range site.Params.blogCategories -}}
+                {{- $term := index site.Taxonomies.categories (lower .name) -}}
+                {{- if $term }}
+            <a class="sidebar-category-item" href="{{ printf "/categories/%s/" (urlize .name) | relLangURL }}">
+                {{- else }}
+            <div class="sidebar-category-item is-empty">
+                {{- end }}
+                <span class="sidebar-category-code">{{ .code }}</span>
+                <span class="sidebar-category-name">{{ .name }}</span>
+                <strong>{{- with $term }}{{ len . }}{{ else }}0{{ end -}}</strong>
+                {{- if $term }}</a>{{ else }}</div>{{ end }}
+            {{- end }}
+        </div>
+    </section>
+
+    <section class="sidebar-panel sidebar-tags" aria-labelledby="sidebar-tag-title">
+        <div class="sidebar-panel-heading">
+            <span class="sidebar-label">INDEX / 02</span>
+            <h2 id="sidebar-tag-title">常用标签</h2>
+        </div>
+        <div class="sidebar-tag-list">
+            {{- range first 12 $tags -}}
+            <a href="{{ printf "/tags/%s/" (urlize .Name) | relLangURL }}">
+                <span>{{ .Name }}</span><strong>{{ .Count }}</strong>
+            </a>
+            {{- else }}
+            <p class="sidebar-empty">还没有标签，等下一篇记录来填上。</p>
+            {{- end -}}
+        </div>
+    </section>
+
+    <section class="sidebar-panel sidebar-recent" aria-labelledby="sidebar-recent-title">
+        <div class="sidebar-panel-heading">
+            <span class="sidebar-label">INDEX / 03</span>
+            <h2 id="sidebar-recent-title">最近更新</h2>
+        </div>
+        <ol class="sidebar-recent-list">
+            {{- range first 3 $sortedPosts -}}
+            <li>
+                <a href="{{ .RelPermalink }}">
+                    <span>{{ .Title }}</span>
+                    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "01.02" }}</time>
+                </a>
+            </li>
+            {{- end -}}
+        </ol>
+    </section>
+
+    <section class="sidebar-panel sidebar-links" aria-labelledby="sidebar-links-title">
+        <div class="sidebar-panel-heading">
+            <span class="sidebar-label">GO FURTHER</span>
+            <h2 id="sidebar-links-title">继续走</h2>
+        </div>
+        <nav class="sidebar-quick-links" aria-label="快捷入口">
+            <a href="{{ "/archives/" | relLangURL }}">归档 <span aria-hidden="true">↗</span></a>
+            <a href="{{ "/tags/" | relLangURL }}">标签 <span aria-hidden="true">↗</span></a>
+            <a href="{{ "/about/" | relLangURL }}">关于 <span aria-hidden="true">↗</span></a>
+        </nav>
+    </section>
+</aside>

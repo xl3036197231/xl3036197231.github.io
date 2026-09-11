@@ -47,37 +47,52 @@
             </div>
         </section>
 
-        <section class="activity-panel" aria-labelledby="activity-title">
+        <section class="activity-panel liveline-panel" aria-labelledby="activity-title">
             <div class="dashboard-panel-heading">
-                <span class="dashboard-kicker">CONTRIBUTION MAP</span>
-                <h3 id="activity-title">一年里的写作活跃度</h3>
-                <p id="activity-summary">每个格子代表一天，颜色越深表示当天记录越多。</p>
+                <span class="dashboard-kicker">WRITING RHYTHM</span>
+                <h3 id="activity-title">写作轨迹</h3>
+                <p id="activity-liveline-caption">用一条线看见最近一年的记录节奏；把鼠标移到曲线上查看具体日期。</p>
             </div>
-            <div class="activity-heatmap" data-activity='{{ $activity | jsonify }}'>
-                <div class="activity-heatmap-scroll">
-                    <div class="activity-months" id="activity-months" aria-hidden="true"></div>
-                    <div class="activity-heatmap-row">
-                        <div class="activity-weekdays" aria-hidden="true">
-                            <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
-                        </div>
-                        <div class="activity-grid" id="activity-grid" role="grid" aria-label="过去一年每日文章发布数量"></div>
-                    </div>
-                    <div class="activity-legend" aria-label="活跃度图例">
-                        <span>少</span>
-                        <i data-level="0" aria-hidden="true"></i>
-                        <i data-level="1" aria-hidden="true"></i>
-                        <i data-level="2" aria-hidden="true"></i>
-                        <i data-level="3" aria-hidden="true"></i>
-                        <i data-level="4" aria-hidden="true"></i>
-                        <span>多</span>
-                    </div>
+            <div class="liveline-chart" data-activity='{{ $activity | jsonify }}'>
+                <canvas id="activity-liveline" class="liveline-canvas" tabindex="0" role="img" aria-label="最近一年每日文章发布数量曲线" aria-describedby="activity-liveline-caption"></canvas>
+                <div class="liveline-live-badge" id="activity-liveline-badge" aria-live="polite">0 篇</div>
+                <div class="liveline-tooltip" id="activity-liveline-tooltip" hidden>
+                    <strong></strong>
+                    <span></span>
                 </div>
-                <table class="activity-data-table visually-hidden" id="activity-data-table">
-                    <caption>每日文章发布数量</caption>
-                    <thead><tr><th scope="col">日期</th><th scope="col">文章数</th></tr></thead>
-                    <tbody></tbody>
-                </table>
             </div>
+            <div class="liveline-footer">
+                <span id="activity-liveline-range">最近一年 · 共 {{ len $posts }} 篇</span>
+                <span>SCRUB TO INSPECT</span>
+            </div>
+            <details class="activity-calendar">
+                <summary>查看每日活跃明细</summary>
+                <div class="activity-heatmap" data-activity='{{ $activity | jsonify }}'>
+                    <div class="activity-heatmap-scroll">
+                        <div class="activity-months" id="activity-months" aria-hidden="true"></div>
+                        <div class="activity-heatmap-row">
+                            <div class="activity-weekdays" aria-hidden="true">
+                                <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+                            </div>
+                            <div class="activity-grid" id="activity-grid" role="grid" aria-label="过去一年每日文章发布数量"></div>
+                        </div>
+                        <div class="activity-legend" aria-label="活跃度图例">
+                            <span>少</span>
+                            <i data-level="0" aria-hidden="true"></i>
+                            <i data-level="1" aria-hidden="true"></i>
+                            <i data-level="2" aria-hidden="true"></i>
+                            <i data-level="3" aria-hidden="true"></i>
+                            <i data-level="4" aria-hidden="true"></i>
+                            <span>多</span>
+                        </div>
+                    </div>
+                    <table class="activity-data-table visually-hidden" id="activity-data-table">
+                        <caption>每日文章发布数量</caption>
+                        <thead><tr><th scope="col">日期</th><th scope="col">文章数</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </details>
         </section>
     </div>
 
