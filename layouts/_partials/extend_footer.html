@@ -915,3 +915,70 @@
     });
 })();
 </script>
+
+<script>
+(() => {
+    const toc = document.querySelector('.post-toc');
+    if (!toc) return;
+
+    const links = Array.from(toc.querySelectorAll('#TableOfContents a'));
+    const items = links.map((link) => {
+        const href = link.getAttribute('href') || '';
+        if (!href.startsWith('#')) return null;
+
+        let id = href.slice(1);
+        try {
+            id = decodeURIComponent(id);
+        } catch (_) {
+            // Keep the original id when a legacy anchor is not URI-encoded.
+        }
+
+        const heading = document.getElementById(id);
+        return heading ? { link, heading } : null;
+    }).filter(Boolean);
+
+    if (!items.length) return;
+
+    const setActive = (current) => {
+        items.forEach(({ link, heading }) => {
+            const active = heading === current;
+            link.classList.toggle('is-active', active);
+            if (active) {
+                link.setAttribute('aria-current', 'location');
+            } else {
+                link.removeAttribute('aria-current');
+            }
+        });
+    };
+
+    const update = () => {
+        const headerHeight = Number.parseFloat(
+            getComputedStyle(document.documentElement).getPropertyValue('--header-height'),
+        ) || 68;
+        const threshold = headerHeight + 44;
+        let current = items[0].heading;
+
+        items.forEach(({ heading }) => {
+            if (heading.getBoundingClientRect().top <= threshold) current = heading;
+        });
+
+        setActive(current);
+    };
+
+    let frame = 0;
+    const scheduleUpdate = () => {
+        if (frame) return;
+        frame = window.requestAnimationFrame(() => {
+            frame = 0;
+            update();
+        });
+    };
+
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate, { passive: true });
+    links.forEach((link) => link.addEventListener('click', () => {
+        window.setTimeout(update, 180);
+    }));
+    update();
+})();
+</script>
