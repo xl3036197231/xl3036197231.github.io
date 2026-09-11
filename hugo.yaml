@@ -1,7 +1,7 @@
 baseURL: "https://xl3036197231.github.io/"
 locale: "zh-CN"
 defaultContentLanguage: "zh"
-title: "小星的秘密花园"
+title: "小星的拾光花园"
 copyright: "迷惘的小星"
 
 theme:
@@ -11,7 +11,7 @@ enableRobotsTXT: true
 
 params:
   env: production
-  title: "小星的秘密花园"
+  title: "小星的拾光花园"
   description: "小星的个人博客。"
   author: "迷惘的小星"
   keywords:
@@ -95,13 +95,16 @@ params:
   ShowRssButtonInSectionTermList: true
 
   label:
-    text: "小星的秘密花园"
+    text: "小星的拾光花园"
 
   homeInfoParams:
     Eyebrow: "XIAOXING / NOTES & BUILDS"
-    TitleLead: "小星的"
-    TitleAccent: "秘密"
-    TitleTail: "花园"
+    DayTitleLead: "小星的"
+    DayTitleAccent: "拾光"
+    DayTitleTail: "花园"
+    NightTitleLead: "小星的"
+    NightTitleAccent: "逐影"
+    NightTitleTail: "花园"
     Content: "学业、靶机、CTF 题解、CTF 知识点笔记、比赛日记、生活随记、科研。"
     PrimaryLabel: "进入文章"
     PrimaryURL: "/posts/"

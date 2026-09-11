@@ -2,9 +2,10 @@
 {{- $sortedPosts := sort $posts "Date" "desc" -}}
 {{- $tags := site.Taxonomies.tags.Alphabetical -}}
 
-<aside class="home-sidebar" aria-label="秘密花园侧栏">
+<aside class="home-sidebar" aria-label="拾光花园侧栏">
     <section class="sidebar-panel sidebar-note">
         <span class="sidebar-label">A SMALL NOTE</span>
+        <img class="sidebar-avatar" src="{{ "/images/avatar.png" | relURL }}" alt="小星头像" width="58" height="59" loading="lazy">
         <div class="sidebar-note-mark" aria-hidden="true">✳</div>
         <p>现在做胜过永远不做。<br>不过，“永远不做”通常又胜过“马上乱做”。</p>
         <span class="sidebar-note-signature">— 小星</span>

@@ -3389,3 +3389,108 @@ body {
         gap: clamp(36px, 3.2vw, 64px);
     }
 }
+/* Personal avatar and day/night garden names */
+.title-night {
+    display: none;
+}
+
+html[data-theme="dark"] .title-day {
+    display: none;
+}
+
+html[data-theme="dark"] .title-night {
+    display: inline;
+}
+
+.logo a .title-day,
+.logo a .title-night {
+    white-space: nowrap;
+}
+
+.hero-title-variant {
+    display: block;
+}
+
+.hero-title-variant.title-night {
+    display: none;
+}
+
+html[data-theme="dark"] .hero-title-variant.title-day {
+    display: none;
+}
+
+html[data-theme="dark"] .hero-title-variant.title-night {
+    display: block;
+}
+
+.hero-avatar {
+    display: block;
+    width: clamp(74px, 7vw, 96px);
+    height: clamp(75px, 7.1vw, 97px);
+    margin: 28px 0 0 auto;
+    object-fit: cover;
+    border: 4px solid color-mix(in srgb, var(--entry) 82%, var(--template-violet));
+    border-radius: 50%;
+    box-shadow: 0 10px 26px color-mix(in srgb, var(--template-violet) 18%, transparent);
+}
+
+.sidebar-note {
+    padding-right: 100px;
+}
+
+.sidebar-avatar {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    width: 58px;
+    height: 59px;
+    object-fit: cover;
+    border: 3px solid color-mix(in srgb, var(--entry) 84%, var(--accent));
+    border-radius: 50%;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+.post-single .post-content img[src*="/images/avatar.png"] {
+    display: block;
+    width: 112px;
+    height: 113px;
+    margin: 8px 0 22px;
+    object-fit: cover;
+    border: 4px solid color-mix(in srgb, var(--entry) 84%, var(--template-blue));
+    border-radius: 50%;
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--template-blue) 16%, transparent);
+}
+
+.post-single .post-meta::before {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 6px;
+    content: "";
+    vertical-align: -5px;
+    background: url("/images/avatar.png") center / cover no-repeat;
+    border: 2px solid color-mix(in srgb, var(--entry) 84%, var(--template-blue));
+    border-radius: 50%;
+}
+
+@media (max-width: 900px) {
+    .hero-avatar {
+        grid-column: 1 / -1;
+        width: 76px;
+        height: 77px;
+        margin: 0;
+    }
+}
+
+@media (max-width: 620px) {
+    .sidebar-note {
+        padding-right: 88px;
+    }
+
+    .sidebar-avatar {
+        top: 18px;
+        right: 18px;
+        width: 52px;
+        height: 53px;
+    }
+}
