@@ -982,3 +982,132 @@
     update();
 })();
 </script>
+
+{{- $mazeSecPaths := slice -}}
+{{- range site.RegularPages -}}
+    {{- if in .Params.categories "靶机" -}}
+        {{- $mazeSecPaths = $mazeSecPaths | append .RelPermalink -}}
+    {{- end -}}
+{{- end -}}
+<script>
+(() => {
+    const restrictedPaths = new Set({{ $mazeSecPaths | jsonify }});
+    if (!restrictedPaths.size) return;
+
+    const normalizePath = (value) => {
+        let url;
+        try {
+            url = new URL(value, window.location.href);
+        } catch (_) {
+            return '';
+        }
+        if (url.origin !== window.location.origin) return '';
+
+        let path = url.pathname || '/';
+        try {
+            path = decodeURIComponent(path);
+        } catch (_) {
+            // Keep the encoded path when it contains a malformed escape.
+        }
+        path = path.replace(/\/+$/, '/');
+        return path || '/';
+    };
+
+    const isRestrictedArticle = (anchor) => restrictedPaths.has(normalizePath(anchor.href));
+    let dialog;
+    let input;
+    let error;
+    let pendingHref = '';
+    let lastFocused;
+
+    const ensureDialog = () => {
+        if (dialog) return;
+
+        dialog = document.createElement('dialog');
+        dialog.className = 'mazesec-gate-dialog';
+        dialog.setAttribute('aria-labelledby', 'mazesec-gate-title');
+        dialog.innerHTML = `
+            <form class="mazesec-gate-form">
+                <span class="mazesec-gate-kicker">MAZESEC / ACCESS CHECK</span>
+                <h2 id="mazesec-gate-title">进入靶机记录</h2>
+                <p class="mazesec-gate-description">这部分记录需要先输入 MazeSec 公开 QQ 群号。</p>
+                <label class="mazesec-gate-label" for="mazesec-gate-input">公开 QQ 群号</label>
+                <input class="mazesec-gate-input" id="mazesec-gate-input" type="text" inputmode="numeric" autocomplete="off" maxlength="12" aria-describedby="mazesec-gate-error">
+                <p class="mazesec-gate-error" id="mazesec-gate-error" role="alert" hidden>群号不正确，请重新输入。</p>
+                <div class="mazesec-gate-actions">
+                    <button type="button" data-gate-cancel>返回</button>
+                    <button type="submit">验证并进入</button>
+                </div>
+            </form>
+        `;
+        document.body.appendChild(dialog);
+
+        const form = dialog.querySelector('.mazesec-gate-form');
+        input = dialog.querySelector('#mazesec-gate-input');
+        error = dialog.querySelector('#mazesec-gate-error');
+        const cancel = dialog.querySelector('[data-gate-cancel]');
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            if (input.value.replace(/\s+/g, '') !== '321948805') {
+                input.setAttribute('aria-invalid', 'true');
+                error.hidden = false;
+                input.focus();
+                return;
+            }
+
+            const target = pendingHref;
+            dialog.close();
+            pendingHref = '';
+            window.location.assign(target);
+        });
+
+        input.addEventListener('input', () => {
+            input.removeAttribute('aria-invalid');
+            error.hidden = true;
+        });
+
+        cancel.addEventListener('click', () => dialog.close());
+        dialog.addEventListener('click', (event) => {
+            if (event.target === dialog) dialog.close();
+        });
+        dialog.addEventListener('close', () => {
+            pendingHref = '';
+            if (lastFocused && typeof lastFocused.focus === 'function') {
+                lastFocused.focus({ preventScroll: true });
+            }
+        });
+    };
+
+    const openDialog = (href, source) => {
+        ensureDialog();
+        pendingHref = href;
+        lastFocused = source;
+        input.value = '';
+        input.removeAttribute('aria-invalid');
+        error.hidden = true;
+
+        if (typeof dialog.showModal !== 'function') {
+            const answer = window.prompt('请输入 MazeSec 公开 QQ 群号');
+            if (answer && answer.replace(/\s+/g, '') === '321948805') {
+                window.location.assign(href);
+            }
+            return;
+        }
+
+        dialog.showModal();
+        window.setTimeout(() => input.focus(), 0);
+    };
+
+    document.addEventListener('click', (event) => {
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+        const target = event.target;
+        const anchor = target instanceof Element ? target.closest('a[href]') : null;
+        if (!anchor || !isRestrictedArticle(anchor)) return;
+
+        event.preventDefault();
+        openDialog(anchor.href, anchor);
+    }, true);
+})();
+</script>
