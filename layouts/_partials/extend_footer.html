@@ -199,7 +199,7 @@
         return;
     }
 
-    document.querySelectorAll('.category-card:not(.is-empty), .post-entry, .terms-directory li, .empty-state, .pdf-viewer').forEach((card) => {
+    document.querySelectorAll('.category-card:not(.is-empty), .post-entry, .terms-directory li, .empty-state, .pdf-viewer, .open-feature-card, .open-workflow-panel, .open-cta').forEach((card) => {
         card.classList.add('spotlight-card');
         card.addEventListener('pointermove', (event) => {
             const rect = card.getBoundingClientRect();

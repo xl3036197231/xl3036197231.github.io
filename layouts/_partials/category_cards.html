@@ -1,8 +1,8 @@
 <div class="category-grid{{ with .mode }} category-grid-{{ . }}{{ end }}" aria-label="博客分类目录">
     {{- range site.Params.blogCategories }}
-        {{- $term := index site.Taxonomies.categories .name }}
+        {{- $term := index site.Taxonomies.categories (lower .name) }}
         {{- if $term }}
-    <a class="category-card" href="{{ printf "/categories/%s/" .name | relLangURL }}" aria-label="浏览{{ .name }}分类，共 {{ len $term }} 篇文章">
+    <a class="category-card" href="{{ printf "/categories/%s/" (urlize .name) | relLangURL }}" aria-label="浏览{{ .name }}分类，共 {{ len $term }} 篇文章">
         {{- else }}
     <div class="category-card is-empty" aria-label="{{ .name }}分类，暂时没有文章">
         {{- end }}

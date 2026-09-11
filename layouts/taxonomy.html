@@ -19,15 +19,14 @@
     {{- range $terms }}
         {{- $name := .Name }}
         {{- $count := .Count }}
-        {{- with site.GetPage (printf "/%s/%s" $type $name) }}
+        {{- $termPage := site.GetPage (printf "/%s/%s" $type $name) }}
     <li>
-        <a href="{{ .Permalink }}">
-            <span class="term-name">{{ .LinkTitle }}</span>
+        <a href="{{ printf "/%s/%s/" $type (urlize $name) | relLangURL }}">
+            <span class="term-name">{{ $termPage.LinkTitle }}</span>
             <span class="term-count" aria-label="{{ $count }} 篇文章">{{ printf "%02d" $count }}</span>
             <span class="term-arrow" aria-hidden="true">↗</span>
         </a>
     </li>
-        {{- end }}
     {{- end }}
 </ul>
 {{- else }}

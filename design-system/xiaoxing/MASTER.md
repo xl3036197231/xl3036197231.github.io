@@ -40,7 +40,7 @@
 
 ### Typography
 
-- **Heading Font:** Public Sans (Bold 700)
+- **Heading Font:** Nacelle (Semibold 600, reused from the Cruip Open template)
 - **Display Accent:** Libre Bodoni (logo and manifesto)
 - **Body Font:** Public Sans
 - **Mood:** magazine, editorial, publishing, refined, journalism, print
@@ -57,10 +57,18 @@
 }
 
 @font-face {
-  font-family: "Public Sans";
-  src: url("/fonts/public-sans-latin.woff2") format("woff2");
+  font-family: "Nacelle";
+  src: url("/fonts/nacelle-regular.woff2") format("woff2");
   font-style: normal;
-  font-weight: 400 700;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Nacelle";
+  src: url("/fonts/nacelle-semibold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
   font-display: swap;
 }
 ```
@@ -202,8 +210,8 @@
 **Pattern Name:** Editorial Homepage + Content Index
 
 - **Content Strategy:** Lead with a concise personal statement and make the newest writing immediately discoverable. Preserve a complete DOM reading order without JavaScript.
-- **CTA Placement:** Two hero actions (articles + about), followed by the latest-post index.
-- **Section Order:** Identity/navigation > Editorial hero > Latest posts > Footer.
+- **CTA Placement:** Hero actions, category map, learning path, workflow panel, then a final reading CTA before the latest-post index.
+- **Section Order:** Identity/navigation > Editorial hero > Category map > Learning path > Workflow > CTA > Latest posts > Footer.
 - **Directory Pattern:** Taxonomy terms use bordered two-column index cards; empty taxonomies show an explanation and a clear action instead of blank space.
 
 ---

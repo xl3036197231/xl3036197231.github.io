@@ -1,0 +1,151 @@
+{{- $postCount := len (where site.RegularPages "Section" "posts") -}}
+{{- $categoryCount := len site.Params.blogCategories -}}
+{{- $academic := index site.Taxonomies.categories (lower "学业") -}}
+{{- $notes := index site.Taxonomies.categories (lower "CTF 知识点笔记") -}}
+{{- $labs := index site.Taxonomies.categories (lower "靶机") -}}
+{{- $writeups := index site.Taxonomies.categories (lower "CTF 题解") -}}
+
+<section class="open-section open-learning" aria-labelledby="learning-path-title">
+    <header class="feed-heading open-section-heading">
+        <div>
+            <span class="section-index">03</span>
+            <h2 id="learning-path-title">一条可复盘的学习路径</h2>
+        </div>
+        <span class="open-section-note">READ / TEST / WRITE</span>
+    </header>
+
+    <div class="open-feature-grid">
+        {{- if $academic }}
+        <a class="open-feature-card" href="{{ "/categories/学业/" | relLangURL }}">
+        {{- else }}
+        <div class="open-feature-card is-empty" aria-label="学业分类，待收录文章">
+        {{- end }}
+            <span class="open-feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m3 9 9-5 9 5-9 5-9-5Z" />
+                    <path d="M7 11.2V16c2.9 2.5 7.1 2.5 10 0v-4.8M21 9v6" />
+                </svg>
+            </span>
+            <span class="open-feature-kicker">01 / FOUNDATION</span>
+            <h3>学业</h3>
+            <p>把课程、备考与长期积累的知识，整理成可以回看的学习档案。</p>
+            <span class="open-feature-link">{{ if $academic }}进入分类 <span aria-hidden="true">↗</span>{{ else }}待收录 <span aria-hidden="true">·</span>{{ end }}</span>
+        {{- if $academic }}</a>{{ else }}</div>{{ end }}
+
+        {{- if $notes }}
+        <a class="open-feature-card" href="{{ printf "/categories/%s/" (urlize "CTF 知识点笔记") | relLangURL }}">
+        {{- else }}
+        <div class="open-feature-card is-empty" aria-label="CTF 知识点笔记分类，待收录文章">
+        {{- end }}
+            <span class="open-feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16Z" />
+                    <path d="M4 18.5A2.5 2.5 0 0 1 6.5 16H20M8 7h8M8 10h6" />
+                </svg>
+            </span>
+            <span class="open-feature-kicker">02 / DECONSTRUCT</span>
+            <h3>知识点笔记</h3>
+            <p>拆开工具、原理与常见题型，让零散的知识逐渐变成自己的索引。</p>
+            <span class="open-feature-link">{{ if $notes }}进入分类 <span aria-hidden="true">↗</span>{{ else }}待收录 <span aria-hidden="true">·</span>{{ end }}</span>
+        {{- if $notes }}</a>{{ else }}</div>{{ end }}
+
+        {{- if $labs }}
+        <a class="open-feature-card" href="{{ "/categories/靶机/" | relLangURL }}">
+        {{- else }}
+        <div class="open-feature-card is-empty" aria-label="靶机分类，待收录文章">
+        {{- end }}
+            <span class="open-feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="16" rx="2" />
+                    <path d="m7 9 3 3-3 3M13 15h4" />
+                </svg>
+            </span>
+            <span class="open-feature-kicker">03 / LABORATORY</span>
+            <h3>靶机</h3>
+            <p>沿着信息收集、漏洞验证到权限提升，记录每一次动手之后的判断。</p>
+            <span class="open-feature-link">{{ if $labs }}进入分类 <span aria-hidden="true">↗</span>{{ else }}待收录 <span aria-hidden="true">·</span>{{ end }}</span>
+        {{- if $labs }}</a>{{ else }}</div>{{ end }}
+
+        {{- if $writeups }}
+        <a class="open-feature-card" href="{{ printf "/categories/%s/" (urlize "CTF 题解") | relLangURL }}">
+        {{- else }}
+        <div class="open-feature-card is-empty" aria-label="CTF 题解分类，待收录文章">
+        {{- end }}
+            <span class="open-feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 3h12a2 2 0 0 1 2 2v14l-4-2-4 2-4-2-4 2V5a2 2 0 0 1 2-2Z" />
+                    <path d="m9 10 2 2 4-4M9 15h6" />
+                </svg>
+            </span>
+            <span class="open-feature-kicker">04 / WRITE-UP</span>
+            <h3>CTF 题解</h3>
+            <p>把比赛与练习中的解题过程写成线索，方便未来的自己快速复盘。</p>
+            <span class="open-feature-link">{{ if $writeups }}进入分类 <span aria-hidden="true">↗</span>{{ else }}待收录 <span aria-hidden="true">·</span>{{ end }}</span>
+        {{- if $writeups }}</a>{{ else }}</div>{{ end }}
+    </div>
+</section>
+
+<section class="open-section open-workbench" aria-labelledby="workbench-title">
+    <div class="open-workflow-panel spotlight-card">
+        <div class="open-workflow-intro">
+            <span class="section-index">04 / WORKFLOW</span>
+            <h2 id="workbench-title">把一次探索，变成下一次的起点。</h2>
+            <p>这个数字花园不是单纯的文章列表，而是一套从收集到验证、再到表达的个人工作台。</p>
+            <div class="open-stats" aria-label="博客统计">
+                <div>
+                    <strong>{{ $postCount }}</strong>
+                    <span>篇记录</span>
+                </div>
+                <div>
+                    <strong>{{ $categoryCount }}</strong>
+                    <span>个方向</span>
+                </div>
+                <div>
+                    <strong>PDF</strong>
+                    <span>可直接阅读</span>
+                </div>
+            </div>
+        </div>
+
+        <ol class="open-workflow-steps">
+            <li class="open-workflow-step">
+                <span class="open-step-number">01</span>
+                <div>
+                    <strong>收集</strong>
+                    <p>留下问题、线索和当下还没有答案的部分。</p>
+                </div>
+            </li>
+            <li class="open-workflow-step">
+                <span class="open-step-number">02</span>
+                <div>
+                    <strong>验证</strong>
+                    <p>在课程、靶机和 CTF 环境里动手，把猜想变成证据。</p>
+                </div>
+            </li>
+            <li class="open-workflow-step">
+                <span class="open-step-number">03</span>
+                <div>
+                    <strong>表达</strong>
+                    <p>把过程整理成文章、题解或一份可持续更新的笔记。</p>
+                </div>
+            </li>
+        </ol>
+    </div>
+</section>
+
+<section class="open-cta spotlight-card" aria-labelledby="open-cta-title">
+    <div>
+        <span class="section-index">NEXT / KEEP GOING</span>
+        <h2 id="open-cta-title">从一个问题开始，慢慢把它讲清楚。</h2>
+    </div>
+    <div class="open-cta-actions">
+        <a class="hero-button hero-button-primary" href="{{ "/posts/" | relLangURL }}">
+            <span>浏览全部文章</span>
+            <span aria-hidden="true">↗</span>
+        </a>
+        <a class="hero-button hero-button-secondary" href="{{ "/categories/" | relLangURL }}">
+            <span>查看分类地图</span>
+            <span aria-hidden="true">→</span>
+        </a>
+    </div>
+</section>

@@ -61,9 +61,11 @@
     {{ partial "category_cards.html" (dict "mode" "home") }}
 </section>
 
+{{ partial "open_sections.html" . }}
+
 <header class="feed-heading">
     <div>
-        <span class="section-index">03</span>
+        <span class="section-index">05</span>
         <h2>最近文章</h2>
     </div>
     <a href="{{ "/posts/" | relLangURL }}">查看全部 <span aria-hidden="true">→</span></a>
