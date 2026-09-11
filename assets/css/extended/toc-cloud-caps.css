@@ -67,13 +67,61 @@
 }
 
 .category-word-cloud {
-    display: flex;
+    display: grid;
     min-height: 148px;
     padding: 20px 0 2px;
+    gap: 18px;
+}
+
+.category-word-cloud-meta {
+    display: flex;
+    margin-top: 16px;
+    gap: 8px;
+    flex-wrap: wrap;
+    color: var(--secondary);
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.category-word-cloud-meta span {
+    padding: 6px 9px;
+    border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--entry) 72%, transparent);
+}
+
+.category-word-cloud-meta strong {
+    color: var(--template-blue);
+    font-family: var(--caps-font);
+    font-size: 12px;
+}
+
+.category-cloud-group {
+    display: grid;
+    gap: 9px;
+}
+
+.category-cloud-group-label {
+    color: var(--accent);
+    font-size: 10px;
+}
+
+.category-cloud-group-words {
+    display: flex;
+    min-width: 0;
+    padding: 12px 10px;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    gap: 10px 14px;
+    gap: 7px 12px;
+    border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--entry) 65%, transparent);
+}
+
+.category-cloud-group-tags .category-cloud-group-words {
+    border-color: color-mix(in srgb, var(--template-violet) 18%, var(--border));
+    background: color-mix(in srgb, var(--template-violet) 5%, var(--entry));
 }
 
 .category-word {
@@ -89,6 +137,17 @@
     align-items: center;
     gap: 8px;
     transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.category-word-category {
+    text-shadow: 0 4px 18px color-mix(in srgb, var(--template-blue) 16%, transparent);
+}
+
+.category-word-tag {
+    min-height: 36px;
+    padding: 7px 9px;
+    border-bottom-width: 1px;
+    border-radius: 8px;
 }
 
 .category-word.is-active:hover,

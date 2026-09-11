@@ -1013,6 +1013,23 @@
         return path || '/';
     };
 
+    const accessStoragePrefix = 'xiaoxing-mazesec-access:';
+    const accessStorageKey = (href) => accessStoragePrefix + encodeURIComponent(normalizePath(href));
+    const hasArticleAccess = (href) => {
+        try {
+            return localStorage.getItem(accessStorageKey(href)) === 'granted';
+        } catch (_) {
+            return false;
+        }
+    };
+    const rememberArticleAccess = (href) => {
+        try {
+            localStorage.setItem(accessStorageKey(href), 'granted');
+        } catch (_) {
+            // Continue to the article even when storage is unavailable.
+        }
+    };
+
     const isRestrictedArticle = (anchor) => restrictedPaths.has(normalizePath(anchor.href));
     let dialog;
     let input;
@@ -1057,6 +1074,7 @@
             }
 
             const target = pendingHref;
+            rememberArticleAccess(target);
             dialog.close();
             pendingHref = '';
             window.location.assign(target);
@@ -1090,6 +1108,7 @@
         if (typeof dialog.showModal !== 'function') {
             const answer = window.prompt('请输入 MazeSec 公开 QQ 群号');
             if (answer && answer.replace(/\s+/g, '') === '321948805') {
+                rememberArticleAccess(href);
                 window.location.assign(href);
             }
             return;
@@ -1104,7 +1123,7 @@
 
         const target = event.target;
         const anchor = target instanceof Element ? target.closest('a[href]') : null;
-        if (!anchor || !isRestrictedArticle(anchor)) return;
+        if (!anchor || !isRestrictedArticle(anchor) || hasArticleAccess(anchor.href)) return;
 
         event.preventDefault();
         openDialog(anchor.href, anchor);

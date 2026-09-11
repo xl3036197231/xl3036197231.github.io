@@ -1,34 +1,81 @@
-{{- $maxCount := 0 -}}
+{{- $categoryEntries := slice -}}
+{{- $categoryNames := slice -}}
+{{- $categoryMax := 1 -}}
 {{- range site.Params.blogCategories -}}
     {{- $term := index site.Taxonomies.categories (lower .name) -}}
     {{- $count := 0 -}}
     {{- with $term }}{{ $count = len . }}{{ end -}}
-    {{- if gt $count $maxCount }}{{ $maxCount = $count }}{{ end -}}
+    {{- $categoryEntries = $categoryEntries | append (dict "name" .name "count" $count "url" (printf "/categories/%s/" (urlize .name) | relLangURL)) -}}
+    {{- $categoryNames = $categoryNames | append (lower .name) -}}
+    {{- if gt $count $categoryMax }}{{ $categoryMax = $count }}{{ end -}}
 {{- end -}}
-{{- $scaleMax := $maxCount -}}
-{{- if eq $scaleMax 0 }}{{ $scaleMax = 1 }}{{ end -}}
+{{- range $term := site.Taxonomies.categories.ByCount -}}
+    {{- if not (in $categoryNames (lower $term.Name)) -}}
+        {{- $categoryEntries = $categoryEntries | append (dict "name" $term.Name "count" $term.Count "url" $term.Page.RelPermalink) -}}
+        {{- $categoryNames = $categoryNames | append (lower $term.Name) -}}
+        {{- if gt $term.Count $categoryMax }}{{ $categoryMax = $term.Count }}{{ end -}}
+    {{- end -}}
+{{- end -}}
+{{- $tagTerms := slice -}}
+{{- $tagMax := 1 -}}
+{{- range $term := site.Taxonomies.tags.ByCount -}}
+    {{- if not (in $categoryNames (lower $term.Name)) -}}
+        {{- $tagTerms = $tagTerms | append $term -}}
+        {{- if gt $term.Count $tagMax }}{{ $tagMax = $term.Count }}{{ end -}}
+    {{- end -}}
+{{- end -}}
+{{- $tagTerms = first 20 $tagTerms -}}
 
 <div class="category-word-cloud-panel" aria-labelledby="category-cloud-title">
     <div class="dashboard-cloud-heading">
-        <span class="dashboard-kicker caps-label">TOPIC CLOUD</span>
-        <h4 id="category-cloud-title">分类词云</h4>
-        <p>字号按文章数量变化，点击分类继续阅读。</p>
+        <span class="dashboard-kicker caps-label">TOPIC CLOUD / AUTO SYNC</span>
+        <h4 id="category-cloud-title">分类与关键词</h4>
+        <p>根据文章的分类和标签自动汇总；新增文章并发布后，词云会同步更新。</p>
     </div>
-    <div class="category-word-cloud" role="list" aria-label="按文章数量显示的分类词云">
-        {{- range site.Params.blogCategories -}}
-            {{- $term := index site.Taxonomies.categories (lower .name) -}}
-            {{- $count := 0 -}}
-            {{- with $term }}{{ $count = len . }}{{ end -}}
-            {{- $size := add 15 (div (mul $count 26) $scaleMax) -}}
-            {{- if gt $count 0 -}}
-        <a class="category-word is-active" href="{{ printf "/categories/%s/" (urlize .name) | relLangURL }}" style="--word-size: {{ $size }}px;" role="listitem" aria-label="{{ .name }}，{{ $count }} 篇文章">
-            <span>{{ .name }}</span><small>{{ $count }}</small>
+    <div class="category-word-cloud-meta" aria-label="词云统计">
+        <span><strong>{{ len $categoryEntries }}</strong> 个分类</span>
+        <span><strong>{{ len $tagTerms }}</strong> 个关键词</span>
+        <span>字号按文章出现次数变化</span>
+    </div>
+    <div class="category-word-cloud" role="list" aria-label="按文章数量显示的分类与关键词词云">
+        <div class="category-cloud-group" role="group" aria-label="文章分类">
+            <span class="category-cloud-group-label caps-label">CATEGORIES</span>
+            <div class="category-cloud-group-words">
+                {{- range $entry := $categoryEntries -}}
+                    {{- $name := index $entry "name" -}}
+                    {{- $count := index $entry "count" -}}
+                    {{- $url := index $entry "url" -}}
+                    {{- $size := add 15 (div (mul $count 29) $categoryMax) -}}
+                    {{- if gt $count 0 -}}
+        <a class="category-word category-word-category is-active" href="{{ $url }}" style="--word-size: {{ $size }}px;" role="listitem" aria-label="{{ $name }}，{{ $count }} 篇文章">
+            <span>{{ $name }}</span><small>{{ $count }}</small>
         </a>
-            {{- else -}}
-        <span class="category-word is-empty" style="--word-size: {{ $size }}px;" role="listitem" aria-label="{{ .name }}，0 篇文章">
-            <span>{{ .name }}</span><small>0</small>
+                    {{- else -}}
+        <span class="category-word category-word-category is-empty" style="--word-size: {{ $size }}px;" role="listitem" aria-label="{{ $name }}，暂时没有文章">
+            <span>{{ $name }}</span><small>待收录</small>
         </span>
-            {{- end -}}
+                    {{- end -}}
+                {{- end -}}
+            </div>
+        </div>
+        {{- if $tagTerms -}}
+        <div class="category-cloud-group category-cloud-group-tags" role="group" aria-label="文章标签关键词">
+            <span class="category-cloud-group-label caps-label">KEYWORDS</span>
+            <div class="category-cloud-group-words">
+                {{- range $term := $tagTerms -}}
+                    {{- $displayName := $term.Name -}}
+                    {{- range site.Params.tagGroups -}}
+                        {{- range .tags -}}
+                            {{- if eq (lower .) (lower $term.Name) }}{{ $displayName = . }}{{ end -}}
+                        {{- end -}}
+                    {{- end -}}
+                    {{- $size := add 14 (div (mul $term.Count 17) $tagMax) -}}
+        <a class="category-word category-word-tag is-active" href="{{ $term.Page.RelPermalink }}" style="--word-size: {{ $size }}px;" role="listitem" aria-label="{{ $displayName }}，{{ $term.Count }} 篇文章">
+            <span>{{ $displayName }}</span><small>{{ $term.Count }}</small>
+        </a>
+                {{- end -}}
+            </div>
+        </div>
         {{- end -}}
     </div>
 </div>
