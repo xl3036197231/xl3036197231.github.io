@@ -189,3 +189,23 @@
     document.documentElement.addEventListener('mouseleave', hideCursor);
 })();
 </script>
+
+<script>
+(() => {
+    const pointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    if (!pointerQuery.matches || motionQuery.matches) {
+        return;
+    }
+
+    document.querySelectorAll('.category-card:not(.is-empty), .post-entry, .terms-directory li, .empty-state, .pdf-viewer').forEach((card) => {
+        card.classList.add('spotlight-card');
+        card.addEventListener('pointermove', (event) => {
+            const rect = card.getBoundingClientRect();
+            card.style.setProperty('--mouse-x', event.clientX - rect.left + 'px');
+            card.style.setProperty('--mouse-y', event.clientY - rect.top + 'px');
+        }, { passive: true });
+    });
+})();
+</script>

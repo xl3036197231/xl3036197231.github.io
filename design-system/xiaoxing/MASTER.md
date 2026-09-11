@@ -187,9 +187,11 @@
 
 ## Style Guidelines
 
-**Style:** Swiss Modernism 2.0
+**Style:** Swiss Modernism 2.0 + Cruip Open-inspired glow system
 
-**Keywords:** Grid system, Helvetica, modular, asymmetric, international style, rational, clean, mathematical spacing
+**Keywords:** Grid system, Helvetica, modular, asymmetric, international style, rational, clean, mathematical spacing, indigo glow, rounded panels, spotlight interaction
+
+**Reference:** [Cruip Open React template](https://github.com/cruip/open-react-template) — visual patterns adapted to Hugo/PaperMod rather than copied as a React app.
 
 **Best For:** Corporate sites, architecture, editorial, SaaS, museums, professional services, documentation
 
