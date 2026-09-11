@@ -3547,3 +3547,40 @@ html[data-theme="dark"] .hero-title-variant.title-night {
         align-items: flex-start;
         gap: 12px;
     }
+
+/* Compact article cards without clipping summaries or touch targets. */
+.post-entry {
+    min-height: 152px;
+    padding: 24px 26px;
+}
+
+.post-entry::before {
+    margin-bottom: 10px;
+}
+
+.post-entry .entry-footer {
+    padding-left: 18px;
+}
+
+.entry-content {
+    margin-top: 10px;
+    line-height: 1.6;
+}
+
+.entry-meta-wrap {
+    gap: 12px;
+}
+
+@media (max-width: 760px) {
+    .post-entry {
+        min-height: auto;
+        padding: 20px 18px;
+    }
+
+    .post-entry .entry-footer {
+        padding-top: 10px;
+    }
+
+    .entry-content {
+        margin-top: 8px;
+    }
