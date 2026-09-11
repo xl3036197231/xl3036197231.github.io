@@ -991,7 +991,7 @@
 {{- end -}}
 <script>
 (() => {
-    const restrictedPaths = new Set({{ $mazeSecPaths | jsonify }});
+    const restrictedPaths = new Set({{ $mazeSecPaths | jsonify | safeJS }});
     if (!restrictedPaths.size) return;
 
     const normalizePath = (value) => {
@@ -1001,7 +1001,7 @@
         } catch (_) {
             return '';
         }
-        if (url.origin !== window.location.origin) return '';
+        if (url.protocol !== 'http:' && url.protocol !== 'https:') return '';
 
         let path = url.pathname || '/';
         try {
@@ -1100,7 +1100,7 @@
     };
 
     document.addEventListener('click', (event) => {
-        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 
         const target = event.target;
         const anchor = target instanceof Element ? target.closest('a[href]') : null;
