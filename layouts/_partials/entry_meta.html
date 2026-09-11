@@ -1,0 +1,7 @@
+{{- if not .Date.IsZero -}}
+<time datetime="{{ .Date.Format "2006-01-02" }}">发布于 {{ .Date | time.Format (default "2006.01.02" site.Params.DateFormat) }}</time>
+{{- end -}}
+<span>全文 {{ .WordCount }} 字</span>
+{{- with (partial "author.html" .) }}
+<span>作者 {{ . }}</span>
+{{- end -}}
