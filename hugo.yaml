@@ -69,6 +69,17 @@ params:
         - "SQL 注入"
         - "CTF"
         - "Web 安全"
+    - category: "靶机"
+      tags:
+        - "靶机"
+        - "Linux"
+        - "Renew"
+        - "Preference"
+        - "Gost"
+        - "Firebird"
+        - "Blue"
+        - "Base64"
+        - "未完成"
 
   comments:
     enabled: true
