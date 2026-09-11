@@ -1,0 +1,34 @@
+{{- $maxCount := 0 -}}
+{{- range site.Params.blogCategories -}}
+    {{- $term := index site.Taxonomies.categories (lower .name) -}}
+    {{- $count := 0 -}}
+    {{- with $term }}{{ $count = len . }}{{ end -}}
+    {{- if gt $count $maxCount }}{{ $maxCount = $count }}{{ end -}}
+{{- end -}}
+{{- $scaleMax := $maxCount -}}
+{{- if eq $scaleMax 0 }}{{ $scaleMax = 1 }}{{ end -}}
+
+<div class="category-word-cloud-panel" aria-labelledby="category-cloud-title">
+    <div class="dashboard-cloud-heading">
+        <span class="dashboard-kicker caps-label">TOPIC CLOUD</span>
+        <h4 id="category-cloud-title">分类词云</h4>
+        <p>字号按文章数量变化，点击分类继续阅读。</p>
+    </div>
+    <div class="category-word-cloud" role="list" aria-label="按文章数量显示的分类词云">
+        {{- range site.Params.blogCategories -}}
+            {{- $term := index site.Taxonomies.categories (lower .name) -}}
+            {{- $count := 0 -}}
+            {{- with $term }}{{ $count = len . }}{{ end -}}
+            {{- $size := add 15 (div (mul $count 26) $scaleMax) -}}
+            {{- if gt $count 0 -}}
+        <a class="category-word is-active" href="{{ printf "/categories/%s/" (urlize .name) | relLangURL }}" style="--word-size: {{ $size }}px;" role="listitem" aria-label="{{ .name }}，{{ $count }} 篇文章">
+            <span>{{ .name }}</span><small>{{ $count }}</small>
+        </a>
+            {{- else -}}
+        <span class="category-word is-empty" style="--word-size: {{ $size }}px;" role="listitem" aria-label="{{ .name }}，0 篇文章">
+            <span>{{ .name }}</span><small>0</small>
+        </span>
+            {{- end -}}
+        {{- end -}}
+    </div>
+</div>

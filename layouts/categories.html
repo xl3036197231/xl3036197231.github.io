@@ -1,7 +1,7 @@
 {{- define "main" }}
 
 <header class="page-header">
-    <p class="page-eyebrow">INDEX / CATEGORIES</p>
+    <p class="page-eyebrow caps-label">INDEX / CATEGORIES</p>
     <h1>{{ .Title }}</h1>
     {{- if .Description }}
     <div class="post-description">
@@ -12,7 +12,7 @@
 
 <section class="category-page" aria-labelledby="category-page-title">
     <div class="category-page-heading">
-        <span class="section-index">FOUR DIRECTIONS</span>
+        <span class="section-index caps-label">FOUR DIRECTIONS</span>
         <h2 id="category-page-title">七个方向，随便逛。</h2>
     </div>
     {{ partial "category_cards.html" (dict "mode" "page") }}

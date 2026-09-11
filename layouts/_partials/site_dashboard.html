@@ -16,16 +16,16 @@
 <section class="open-section site-dashboard" aria-labelledby="site-dashboard-title">
     <header class="feed-heading open-section-heading">
         <div>
-            <span class="section-index">03</span>
+            <span class="section-index caps-label">03</span>
             <h2 id="site-dashboard-title">站点数据</h2>
         </div>
-        <span class="open-section-note">COUNT / ACTIVITY / RESPONSE</span>
+        <span class="open-section-note caps-label">COUNT / ACTIVITY / RESPONSE</span>
     </header>
 
     <div class="dashboard-grid">
         <section class="category-chart-panel" aria-labelledby="category-chart-title">
             <div class="dashboard-panel-heading">
-                <span class="dashboard-kicker">DISTRIBUTION</span>
+                <span class="dashboard-kicker caps-label">DISTRIBUTION</span>
                 <h3 id="category-chart-title">分类分布</h3>
             </div>
             <div class="category-stat-list">
@@ -44,11 +44,12 @@
                 </div>
                 {{- end -}}
             </div>
+            {{ partial "category_word_cloud.html" . }}
         </section>
 
         <section class="activity-panel liveline-panel" aria-labelledby="activity-title">
             <div class="dashboard-panel-heading">
-                <span class="dashboard-kicker">WRITING RHYTHM</span>
+                <span class="dashboard-kicker caps-label">WRITING RHYTHM</span>
                 <h3 id="activity-title">写作节奏</h3>
                 <p id="activity-liveline-caption">移动到曲线上查看日期。</p>
             </div>
@@ -62,7 +63,7 @@
             </div>
             <div class="liveline-footer">
                 <span id="activity-liveline-range">最近一年 · 共 {{ len $posts }} 篇</span>
-                <span>SCRUB TO INSPECT</span>
+                <span class="caps-label">SCRUB TO INSPECT</span>
             </div>
             <details class="activity-calendar">
                 <summary>查看每日活跃明细</summary>
@@ -101,7 +102,7 @@
         data-likes-endpoint="{{ $likes.endpoint }}"
         data-likes-namespace="{{ $likes.namespace }}">
         <div class="interaction-intro">
-            <span class="dashboard-kicker">COMMUNITY SIGNALS</span>
+            <span class="dashboard-kicker caps-label">COMMUNITY SIGNALS</span>
             <h3>互动</h3>
         </div>
         <div class="interaction-metrics" aria-label="博客互动统计">

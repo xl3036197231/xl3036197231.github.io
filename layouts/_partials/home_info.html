@@ -2,7 +2,7 @@
 <section class="first-entry home-info editorial-hero" aria-labelledby="hero-title">
     <div class="hero-grid" aria-hidden="true"></div>
     <div class="hero-copy">
-        <p class="hero-eyebrow">{{ .Eyebrow }}</p>
+        <p class="hero-eyebrow caps-label">{{ .Eyebrow }}</p>
         <h1 id="hero-title">
             <span class="hero-title-variant title-day">
                 <span class="hero-title-line">{{ .DayTitleLead }}<em>{{ .DayTitleAccent }}</em></span>
@@ -30,26 +30,26 @@
     </div>
 
     <aside class="hero-aside" aria-label="博客信息">
-        <span class="hero-index">01</span>
+        <span class="hero-index caps-label">01</span>
         <img class="hero-avatar" src="{{ "/images/avatar.png" | relURL }}" alt="小星头像" width="88" height="89" loading="eager">
         <dl class="hero-facts">
             <div>
-                <dt>FIELD</dt>
+                <dt class="caps-label">FIELD</dt>
                 <dd>{{ .Field }}</dd>
             </div>
             <div>
-                <dt>STATUS</dt>
+                <dt class="caps-label">STATUS</dt>
                 <dd><span class="status-dot" aria-hidden="true"></span>{{ .Status }}</dd>
             </div>
             <div>
-                <dt>SINCE</dt>
+                <dt class="caps-label">SINCE</dt>
                 <dd>{{ .Since }}</dd>
             </div>
         </dl>
         <p class="hero-manifesto" aria-hidden="true">
-            <span>THINK</span>
-            <span>MAKE</span>
-            <span>WRITE</span>
+            <span class="caps-label">THINK</span>
+            <span class="caps-label">MAKE</span>
+            <span class="caps-label">WRITE</span>
         </p>
         <div class="hero-social">
             {{ partial "social_icons.html" (dict "align" site.Params.homeInfoParams.AlignSocialIconsTo) }}
@@ -60,7 +60,7 @@
 <section class="category-overview" aria-labelledby="category-overview-title">
     <header class="feed-heading category-heading">
         <div>
-            <span class="section-index">02</span>
+            <span class="section-index caps-label">02</span>
             <h2 id="category-overview-title">按分类阅读</h2>
         </div>
         <a href="{{ "/categories/" | relLangURL }}">完整分类 <span aria-hidden="true">→</span></a>
@@ -72,7 +72,7 @@
 
 <header class="feed-heading">
     <div>
-        <span class="section-index">04</span>
+        <span class="section-index caps-label">04</span>
         <h2>文章与摘要</h2>
     </div>
     <a href="{{ "/posts/" | relLangURL }}">查看全部 <span aria-hidden="true">→</span></a>

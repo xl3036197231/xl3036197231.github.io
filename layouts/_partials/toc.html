@@ -1,0 +1,12 @@
+{{- $headers := findRE "<h[1-4].*?>(.|\n])+?</h[1-4]>" .Content -}}
+{{- if ge (len $headers) 1 -}}
+<nav class="post-toc" aria-labelledby="post-toc-title">
+    <div class="post-toc-heading">
+        <span class="caps-label">ON THIS PAGE</span>
+        <strong id="post-toc-title">文章目录</strong>
+    </div>
+    <div class="post-toc-inner">
+        {{- .TableOfContents -}}
+    </div>
+</nav>
+{{- end -}}

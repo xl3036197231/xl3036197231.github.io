@@ -1,5 +1,3 @@
-{{- $postCount := len (where site.RegularPages "Section" "posts") -}}
-{{- $categoryCount := len site.Params.blogCategories -}}
 {{- $academic := index site.Taxonomies.categories (lower "学业") -}}
 {{- $notes := index site.Taxonomies.categories (lower "CTF 知识点笔记") -}}
 {{- $labs := index site.Taxonomies.categories (lower "靶机") -}}
@@ -8,10 +6,10 @@
 <section class="open-section open-learning" aria-labelledby="learning-path-title">
     <header class="feed-heading open-section-heading">
         <div>
-            <span class="section-index">04</span>
+            <span class="section-index caps-label">04</span>
             <h2 id="learning-path-title">学习路径</h2>
         </div>
-        <span class="open-section-note">READ / TEST / WRITE</span>
+        <span class="open-section-note caps-label">READ / TEST / WRITE</span>
     </header>
 
     <div class="open-feature-grid">
@@ -26,7 +24,7 @@
                     <path d="M7 11.2V16c2.9 2.5 7.1 2.5 10 0v-4.8M21 9v6" />
                 </svg>
             </span>
-            <span class="open-feature-kicker">01 / FOUNDATION</span>
+            <span class="open-feature-kicker caps-label">01 / FOUNDATION</span>
             <h3>学业</h3>
             <p>课程、备考、学习记录。</p>
             <span class="open-feature-link">{{ if $academic }}进入分类 <span aria-hidden="true">↗</span>{{ else }}待收录 <span aria-hidden="true">·</span>{{ end }}</span>
@@ -43,7 +41,7 @@
                     <path d="M4 18.5A2.5 2.5 0 0 1 6.5 16H20M8 7h8M8 10h6" />
                 </svg>
             </span>
-            <span class="open-feature-kicker">02 / DECONSTRUCT</span>
+            <span class="open-feature-kicker caps-label">02 / DECONSTRUCT</span>
             <h3>知识点笔记</h3>
             <p>工具、原理、常见题型。</p>
             <span class="open-feature-link">{{ if $notes }}进入分类 <span aria-hidden="true">↗</span>{{ else }}待收录 <span aria-hidden="true">·</span>{{ end }}</span>
@@ -60,7 +58,7 @@
                     <path d="m7 9 3 3-3 3M13 15h4" />
                 </svg>
             </span>
-            <span class="open-feature-kicker">03 / LABORATORY</span>
+            <span class="open-feature-kicker caps-label">03 / LABORATORY</span>
             <h3>靶机</h3>
             <p>信息收集、漏洞验证、权限提升。</p>
             <span class="open-feature-link">{{ if $labs }}进入分类 <span aria-hidden="true">↗</span>{{ else }}待收录 <span aria-hidden="true">·</span>{{ end }}</span>
@@ -77,75 +75,10 @@
                     <path d="m9 10 2 2 4-4M9 15h6" />
                 </svg>
             </span>
-            <span class="open-feature-kicker">04 / WRITE-UP</span>
+            <span class="open-feature-kicker caps-label">04 / WRITE-UP</span>
             <h3>CTF 题解</h3>
             <p>比赛、练习、解题过程。</p>
             <span class="open-feature-link">{{ if $writeups }}进入分类 <span aria-hidden="true">↗</span>{{ else }}待收录 <span aria-hidden="true">·</span>{{ end }}</span>
         {{- if $writeups }}</a>{{ else }}</div>{{ end }}
-    </div>
-</section>
-
-<section class="open-section open-workbench" aria-labelledby="workbench-title">
-    <div class="open-workflow-panel spotlight-card">
-        <div class="open-workflow-intro">
-            <span class="section-index">05 / WORKFLOW</span>
-            <h2 id="workbench-title">我的记录方式</h2>
-            <p>收集 → 验证 → 表达。</p>
-            <div class="open-stats" aria-label="博客统计">
-                <div>
-                    <strong>{{ $postCount }}</strong>
-                    <span>篇记录</span>
-                </div>
-                <div>
-                    <strong>{{ $categoryCount }}</strong>
-                    <span>个方向</span>
-                </div>
-                <div>
-                    <strong>PDF</strong>
-                    <span>可直接阅读</span>
-                </div>
-            </div>
-        </div>
-
-        <ol class="open-workflow-steps">
-            <li class="open-workflow-step">
-                <span class="open-step-number">01</span>
-                <div>
-                    <strong>收集</strong>
-                    <p>问题、线索和答案。</p>
-                </div>
-            </li>
-            <li class="open-workflow-step">
-                <span class="open-step-number">02</span>
-                <div>
-                    <strong>验证</strong>
-                    <p>动手验证，留下证据。</p>
-                </div>
-            </li>
-            <li class="open-workflow-step">
-                <span class="open-step-number">03</span>
-                <div>
-                    <strong>表达</strong>
-                    <p>整理成文章或笔记。</p>
-                </div>
-            </li>
-        </ol>
-    </div>
-</section>
-
-<section class="open-cta spotlight-card" aria-labelledby="open-cta-title">
-    <div>
-        <span class="section-index">NEXT / KEEP GOING</span>
-        <h2 id="open-cta-title">继续逛逛。</h2>
-    </div>
-    <div class="open-cta-actions">
-        <a class="hero-button hero-button-primary" href="{{ "/posts/" | relLangURL }}">
-            <span>浏览全部文章</span>
-            <span aria-hidden="true">↗</span>
-        </a>
-        <a class="hero-button hero-button-secondary" href="{{ "/categories/" | relLangURL }}">
-            <span>查看分类地图</span>
-            <span aria-hidden="true">→</span>
-        </a>
     </div>
 </section>

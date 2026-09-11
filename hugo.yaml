@@ -9,6 +9,11 @@ theme:
 
 enableRobotsTXT: true
 
+markup:
+  tableOfContents:
+    startLevel: 1
+    endLevel: 4
+    ordered: false
 params:
   env: production
   title: "小星的拾光花园"
@@ -110,7 +115,7 @@ params:
     PrimaryURL: "/posts/"
     SecondaryLabel: "关于小星"
     SecondaryURL: "/about/"
-    Field: "CTF · Web · Study"
+    Field: "CTF · Web · Study · IoT"
     Status: "持续更新"
     Since: "2026"
 

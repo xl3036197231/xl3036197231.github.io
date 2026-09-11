@@ -2,7 +2,7 @@
 
 {{- if .Title }}
 <header class="page-header">
-    <p class="page-eyebrow">INDEX / {{ upper .Type }}</p>
+    <p class="page-eyebrow caps-label">INDEX / {{ upper .Type }}</p>
     <h1>{{ .Title }}</h1>
     {{- if .Description }}
     <div class="post-description">
@@ -15,7 +15,7 @@
 {{- if eq .Type "tags" }}
 <section class="tag-search-panel" id="tag-search-panel" aria-labelledby="tag-search-title">
     <div class="tag-search-copy">
-        <span class="dashboard-kicker">REGEX INDEX</span>
+        <span class="dashboard-kicker caps-label">REGEX INDEX</span>
         <h2 id="tag-search-title">标签</h2>
         <p>支持正则搜索。</p>
     </div>
@@ -65,7 +65,7 @@
 </ul>
 {{- else }}
 <section class="empty-state" aria-labelledby="empty-state-title">
-    <p class="empty-state-index">NO / ENTRIES YET</p>
+    <p class="empty-state-index caps-label">NO / ENTRIES YET</p>
     <h2 id="empty-state-title">暂无内容。</h2>
     <a class="hero-button hero-button-secondary" href="{{ "/posts/" | relLangURL }}">
         先读最新文章 <span aria-hidden="true">→</span>
