@@ -209,3 +209,304 @@
     });
 })();
 </script>
+
+<script>
+(() => {
+    const heatmap = document.querySelector('.activity-heatmap');
+    if (!heatmap) return;
+
+    const grid = heatmap.querySelector('#activity-grid');
+    const months = heatmap.querySelector('#activity-months');
+    const tableBody = heatmap.querySelector('#activity-data-table tbody');
+    const summary = document.getElementById('activity-summary');
+    if (!grid || !months) return;
+
+    let activity = [];
+    try {
+        activity = JSON.parse(heatmap.dataset.activity || '[]');
+    } catch (error) {
+        activity = [];
+    }
+
+    const counts = new Map();
+    activity.forEach((item) => {
+        counts.set(item.date, (counts.get(item.date) || 0) + 1);
+    });
+
+    const toKey = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return year + '-' + month + '-' + day;
+    };
+
+    const formatDate = (date) => new Intl.DateTimeFormat('zh-CN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    }).format(date);
+
+    const end = new Date();
+    end.setHours(12, 0, 0, 0);
+    const start = new Date(end);
+    start.setDate(start.getDate() - 364);
+    start.setDate(start.getDate() - start.getDay());
+
+    const monthLabels = [];
+    let cursor = new Date(start);
+    let column = 0;
+    let activeDays = 0;
+
+    while (true) {
+        const key = toKey(cursor);
+        const count = counts.get(key) || 0;
+        const level = count === 0 ? 0 : count === 1 ? 1 : count <= 3 ? 2 : count <= 5 ? 3 : 4;
+        const cell = document.createElement('button');
+        cell.type = 'button';
+        cell.className = 'activity-cell';
+        cell.dataset.level = String(level);
+        cell.setAttribute('role', 'gridcell');
+        cell.setAttribute('aria-label', formatDate(cursor) + '，' + count + ' 篇文章');
+        cell.title = formatDate(cursor) + ' · ' + count + ' 篇文章';
+        grid.appendChild(cell);
+
+        if (tableBody && cursor <= end) {
+            const row = document.createElement('tr');
+            const dateCell = document.createElement('th');
+            const countCell = document.createElement('td');
+            dateCell.scope = 'row';
+            dateCell.textContent = formatDate(cursor);
+            countCell.textContent = String(count);
+            row.append(dateCell, countCell);
+            tableBody.appendChild(row);
+        }
+
+        if (count > 0 && cursor <= end) activeDays += 1;
+        if (cursor.getDay() === 0 && cursor.getDate() <= 7) {
+            monthLabels.push({ label: (cursor.getMonth() + 1) + '月', column: column + 1 });
+        }
+
+        if (cursor.getDay() === 6 && cursor >= end) break;
+        if (cursor.getDay() === 6) column += 1;
+        cursor.setDate(cursor.getDate() + 1);
+    }
+
+    monthLabels.forEach((month) => {
+        const label = document.createElement('span');
+        label.textContent = month.label;
+        label.style.gridColumn = String(month.column);
+        months.appendChild(label);
+    });
+
+    if (summary) {
+        summary.textContent = activeDays + ' 天有文章记录 · ' + activity.length + ' 篇文章 · 最近一年';
+    }
+})();
+</script>
+
+<script>
+(() => {
+    const interactionRoot = document.getElementById('site-interactions');
+    const postRoot = document.querySelector('.post-engagement');
+    if (!interactionRoot && !postRoot) return;
+
+    const localPrefix = 'xiaoxing-like:';
+    const storage = {
+        get(key) {
+            try { return localStorage.getItem(key); } catch (error) { return null; }
+        },
+        set(key, value) {
+            try { localStorage.setItem(key, value); } catch (error) {}
+        },
+        keys() {
+            try { return Object.keys(localStorage); } catch (error) { return []; }
+        }
+    };
+
+    const localKey = (key) => localPrefix + encodeURIComponent(key);
+    const localLikeTotal = () => storage.keys()
+        .filter((key) => key.startsWith(localPrefix))
+        .reduce((total, key) => total + (storage.get(key) === '1' ? 1 : 0), 0);
+    const numberFrom = (payload, fallback) => {
+        const value = payload && (payload.total ?? payload.count ?? payload.likes);
+        return Number.isFinite(Number(value)) ? Number(value) : fallback;
+    };
+    const setText = (selector, value) => {
+        const element = document.querySelector(selector);
+        if (element) element.textContent = String(value);
+    };
+    const setLikeState = (root, liked, count) => {
+        const button = root.querySelector('#post-like-button');
+        const countElement = root.querySelector('#post-like-count');
+        if (!button) return;
+        button.setAttribute('aria-pressed', String(liked));
+        button.classList.toggle('is-liked', liked);
+        button.querySelector('span').textContent = liked ? '已点赞' : '点赞';
+        if (countElement) countElement.textContent = String(count);
+    };
+
+    const normalizePath = (value) => {
+        let path = String(value || '').split('#')[0].split('?')[0];
+        try { path = new URL(path, window.location.origin).pathname; } catch (error) {}
+        try { path = decodeURIComponent(path); } catch (error) {}
+        path = path.replace(/^\/+/, '/').replace(/\/{2,}/g, '/');
+        if (path !== '/') path = path.replace(/\/+$/, '') + '/';
+        return path || '/';
+    };
+
+    const loadCommentIssues = async (root) => {
+        if (!root) return [];
+        const repo = root.dataset.commentsRepo;
+        const label = root.dataset.commentsLabel || 'comments';
+        if (!repo) return [];
+        const issues = [];
+        for (let page = 1; page <= 3; page += 1) {
+            const url = 'https://api.github.com/repos/' + repo + '/issues?state=all&labels=' + encodeURIComponent(label) + '&per_page=100&page=' + page;
+            const response = await fetch(url, { headers: { Accept: 'application/vnd.github+json' } });
+            if (!response.ok) throw new Error('GitHub comments request failed');
+            const batch = await response.json();
+            issues.push(...batch.filter((issue) => !issue.pull_request));
+            if (batch.length < 100) break;
+        }
+        return issues;
+    };
+
+    const refreshCommentCounts = async () => {
+        const root = interactionRoot || postRoot;
+        try {
+            const issues = await loadCommentIssues(root);
+            const total = issues.reduce((sum, issue) => sum + (Number(issue.comments) || 0), 0);
+            setText('#site-comment-count', total);
+            document.querySelectorAll('.post-engagement[data-comment-key]').forEach((post) => {
+                const key = normalizePath(post.dataset.commentKey);
+                const issue = issues.find((item) => normalizePath(item.title) === key);
+                const count = issue ? (Number(issue.comments) || 0) : 0;
+                const countElement = post.querySelector('#post-comment-count');
+                if (countElement) countElement.textContent = String(count);
+            });
+        } catch (error) {
+            setText('#site-comment-count', '—');
+        }
+    };
+
+    const getRemoteCount = async (endpoint, key) => {
+        const response = await fetch(endpoint + '?key=' + encodeURIComponent(key), {
+            headers: { Accept: 'application/json' }
+        });
+        if (!response.ok) throw new Error('Like count request failed');
+        return numberFrom(await response.json(), null);
+    };
+
+    const syncPostLike = async (root) => {
+        const button = root.querySelector('#post-like-button');
+        const endpoint = (root.dataset.likesEndpoint || '').trim();
+        const key = root.dataset.likeKey || window.location.pathname;
+        const liked = storage.get(localKey(key)) === '1';
+        let count = liked ? 1 : 0;
+        if (endpoint) {
+            try { count = await getRemoteCount(endpoint, key); } catch (error) {}
+        }
+        setLikeState(root, liked, count);
+        if (!button) return;
+        button.addEventListener('click', async () => {
+            if (button.disabled) return;
+            const nextLiked = button.getAttribute('aria-pressed') !== 'true';
+            button.disabled = true;
+            button.setAttribute('aria-busy', 'true');
+            try {
+                if (endpoint) {
+                    const response = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                        body: JSON.stringify({ action: nextLiked ? 'like' : 'unlike', key })
+                    });
+                    if (!response.ok) throw new Error('Like update failed');
+                    count = numberFrom(await response.json(), nextLiked ? count + 1 : Math.max(0, count - 1));
+                } else {
+                    storage.set(localKey(key), nextLiked ? '1' : '0');
+                    count = nextLiked ? 1 : 0;
+                }
+                setLikeState(root, nextLiked, count);
+            } catch (error) {
+                button.setAttribute('aria-busy', 'false');
+            } finally {
+                button.disabled = false;
+                button.setAttribute('aria-busy', 'false');
+            }
+        });
+    };
+
+    const syncSiteLikes = async () => {
+        if (!interactionRoot) return;
+        const endpoint = (interactionRoot.dataset.likesEndpoint || '').trim();
+        let total = localLikeTotal();
+        if (endpoint) {
+            try { total = await getRemoteCount(endpoint, 'site'); } catch (error) {}
+        }
+        setText('#site-like-count', total);
+    };
+
+    if (postRoot) syncPostLike(postRoot);
+    syncSiteLikes();
+    refreshCommentCounts();
+})();
+</script>
+
+<script>
+(() => {
+    const panel = document.getElementById('tag-search-panel');
+    const directory = document.querySelector('.tag-directory');
+    if (!panel || !directory) return;
+
+    const input = document.getElementById('tag-search-input');
+    const select = document.getElementById('tag-category-filter');
+    const clear = document.getElementById('tag-search-clear');
+    const status = document.getElementById('tag-search-status');
+    const items = [...directory.querySelectorAll('[data-tag-name]')];
+
+    const filter = () => {
+        const query = input.value.trim();
+        const category = select.value;
+        let matcher = null;
+        if (query) {
+            try {
+                matcher = new RegExp(query, 'i');
+                panel.classList.remove('has-error');
+            } catch (error) {
+                panel.classList.add('has-error');
+                items.forEach((item) => { item.hidden = true; });
+                status.textContent = '正则表达式无效，请检查括号、转义符或星号。';
+                return;
+            }
+        } else {
+            panel.classList.remove('has-error');
+        }
+
+        let visible = 0;
+        items.forEach((item) => {
+            const matchesText = !matcher || matcher.test(item.dataset.tagName || '');
+            const matchesCategory = !category || item.dataset.tagCategory === category;
+            item.hidden = !(matchesText && matchesCategory);
+            if (!item.hidden) visible += 1;
+        });
+
+        if (!query && !category) {
+            status.textContent = items.length + ' 个标签，输入一个字即可开始匹配。';
+        } else if (visible) {
+            status.textContent = '匹配到 ' + visible + ' 个标签。';
+        } else {
+            status.textContent = '没有匹配结果，可以换一个字或切换分类。';
+        }
+    };
+
+    input.addEventListener('input', filter);
+    select.addEventListener('change', filter);
+    clear.addEventListener('click', () => {
+        input.value = '';
+        select.value = '';
+        input.focus();
+        filter();
+    });
+    filter();
+})();
+</script>

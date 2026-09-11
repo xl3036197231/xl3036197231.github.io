@@ -211,8 +211,10 @@
 
 - **Content Strategy:** Lead with a concise personal statement and make the newest writing immediately discoverable. Preserve a complete DOM reading order without JavaScript.
 - **CTA Placement:** Hero actions, category map, learning path, workflow panel, then a final reading CTA before the latest-post index.
-- **Section Order:** Identity/navigation > Editorial hero > Category map > Learning path > Workflow > CTA > Latest posts > Footer.
-- **Directory Pattern:** Taxonomy terms use bordered two-column index cards; empty taxonomies show an explanation and a clear action instead of blank space.
+- **Section Order:** Identity/navigation > Editorial hero > Category map > Content data dashboard > Learning path > Workflow > CTA > Latest posts > Footer.
+- **Dashboard Pattern:** Category counts use proportional bars; the annual activity map uses a five-step numeric legend, tooltips, and an accessible data table instead of color alone.
+- **Directory Pattern:** Taxonomy terms use bordered index cards; the tag directory adds regex search, a category select, and visible category badges. Empty taxonomies show an explanation and a clear action instead of blank space.
+- **Interaction Pattern:** Articles expose an anchored Utterances comment panel and a like control. The homepage aggregates comment and like totals without exposing article names for likes; a shared likes endpoint is optional for static hosting.
 
 ---
 

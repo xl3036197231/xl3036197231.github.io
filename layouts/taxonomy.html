@@ -12,17 +12,51 @@
 </header>
 {{- end }}
 
+{{- if eq .Type "tags" }}
+<section class="tag-search-panel" id="tag-search-panel" aria-labelledby="tag-search-title">
+    <div class="tag-search-copy">
+        <span class="dashboard-kicker">REGEX INDEX</span>
+        <h2 id="tag-search-title">按标签寻找入口</h2>
+        <p>输入一个字、词或正则表达式，实时匹配包含它的全部标签。</p>
+    </div>
+    <div class="tag-search-controls">
+        <label for="tag-search-input">正则搜索
+            <input id="tag-search-input" type="search" inputmode="search" autocomplete="off" placeholder="例如：CTF 或 注" aria-describedby="tag-search-status">
+        </label>
+        <label for="tag-category-filter">所属分类
+            <select id="tag-category-filter" aria-describedby="tag-search-status">
+                <option value="">全部分类</option>
+                {{- range site.Params.blogCategories }}
+                <option value="{{ .name }}">{{ .name }}</option>
+                {{- end }}
+                <option value="待归类">待归类</option>
+            </select>
+        </label>
+        <button class="tag-search-clear" id="tag-search-clear" type="button">清空</button>
+    </div>
+    <p class="tag-search-status" id="tag-search-status" role="status" aria-live="polite">正在加载标签索引…</p>
+</section>
+{{- end }}
+
 {{- $type := .Type }}
 {{- $terms := .Data.Terms.Alphabetical }}
 {{- if gt (len $terms) 0 }}
-<ul class="terms-directory" aria-label="{{ .Title }}目录">
+<ul class="terms-directory{{ if eq .Type "tags" }} tag-directory{{ end }}" aria-label="{{ .Title }}目录">
     {{- range $terms }}
         {{- $name := .Name }}
         {{- $count := .Count }}
         {{- $termPage := site.GetPage (printf "/%s/%s" $type $name) }}
-    <li>
+        {{- $tagCategory := "待归类" }}
+        {{- range site.Params.tagGroups }}
+            {{- $groupCategory := .category }}
+            {{- range .tags }}
+                {{- if eq (lower .) (lower $name) }}{{ $tagCategory = $groupCategory }}{{ end }}
+            {{- end }}
+        {{- end }}
+    <li data-tag-name="{{ $name }}" data-tag-category="{{ $tagCategory }}">
         <a href="{{ printf "/%s/%s/" $type (urlize $name) | relLangURL }}">
             <span class="term-name">{{ $termPage.LinkTitle }}</span>
+            {{- if eq $type "tags" }}<span class="tag-category-badge">{{ $tagCategory }}</span>{{ end }}
             <span class="term-count" aria-label="{{ $count }} 篇文章">{{ printf "%02d" $count }}</span>
             <span class="term-arrow" aria-hidden="true">↗</span>
         </a>

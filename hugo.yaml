@@ -39,6 +39,45 @@ params:
       code: "04"
       label: "CTF / NOTES"
       description: "整理工具、原理与常见题型，建立自己的知识索引。"
+    - name: "比赛日记"
+      code: "05"
+      label: "COMPETITION / DIARY"
+      description: "记录比赛现场、赛后复盘和每一次没有白走的弯路。"
+    - name: "生活随记"
+      code: "06"
+      label: "LIFE / NOTES"
+      description: "技术之外的日常、灵感与正在形成的生活观察。"
+    - name: "科研"
+      code: "07"
+      label: "RESEARCH / LAB"
+      description: "整理科研阅读、实验过程和仍在探索的问题。"
+
+  tagGroups:
+    - category: "学业"
+      tags:
+        - "博客"
+    - category: "生活随记"
+      tags:
+        - "随笔"
+    - category: "CTF 知识点笔记"
+      tags:
+        - "SQL 注入"
+        - "CTF"
+        - "Web 安全"
+
+  comments:
+    enabled: true
+    provider: "utterances"
+    repo: "xl3036197231/xl3036197231.github.io"
+    issueTerm: "pathname"
+    label: "comments"
+    theme: "preferred-color-scheme"
+
+  likes:
+    enabled: true
+    namespace: "xiaoxing-blog"
+    endpoint: ""
+
   images:
     - "/og.png"
 
@@ -63,7 +102,7 @@ params:
     TitleLead: "构建、"
     TitleAccent: "记录"
     TitleTail: "偶尔迷路。"
-    Content: "这里按学业、靶机、CTF 题解与 CTF 知识点笔记整理记录。把复杂的事情讲清楚，也给尚未想明白的问题留一个位置。"
+    Content: "这里按学业、靶机、CTF 题解、CTF 知识点笔记、比赛日记、生活随记与科研整理记录。把复杂的事情讲清楚，也给尚未想明白的问题留一个位置。"
     PrimaryLabel: "开始阅读"
     PrimaryURL: "/posts/"
     SecondaryLabel: "关于小星"

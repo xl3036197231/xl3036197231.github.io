@@ -1,0 +1,109 @@
+{{- $posts := where site.RegularPages "Section" "posts" -}}
+{{- $maxCount := 0 -}}
+{{- range site.Params.blogCategories -}}
+    {{- $term := index site.Taxonomies.categories (lower .name) -}}
+    {{- $count := 0 -}}
+    {{- with $term }}{{ $count = len . }}{{ end -}}
+    {{- if gt $count $maxCount }}{{ $maxCount = $count }}{{ end -}}
+{{- end -}}
+{{- $activity := slice -}}
+{{- range $posts -}}
+    {{- $activity = $activity | append (dict "date" (.Date.Format "2006-01-02") "title" .Title) -}}
+{{- end -}}
+{{- $comments := site.Params.comments -}}
+{{- $likes := site.Params.likes -}}
+
+<section class="open-section site-dashboard" aria-labelledby="site-dashboard-title">
+    <header class="feed-heading open-section-heading">
+        <div>
+            <span class="section-index">03</span>
+            <h2 id="site-dashboard-title">内容数据总览</h2>
+        </div>
+        <span class="open-section-note">COUNT / ACTIVITY / RESPONSE</span>
+    </header>
+
+    <div class="dashboard-grid">
+        <section class="category-chart-panel" aria-labelledby="category-chart-title">
+            <div class="dashboard-panel-heading">
+                <span class="dashboard-kicker">DISTRIBUTION</span>
+                <h3 id="category-chart-title">每个方向写了多少</h3>
+                <p>文章按当前分类统计，新的内容发布后会自动进入这里。</p>
+            </div>
+            <div class="category-stat-list">
+                {{- range site.Params.blogCategories -}}
+                    {{- $term := index site.Taxonomies.categories (lower .name) -}}
+                    {{- $count := 0 -}}
+                    {{- with $term }}{{ $count = len . }}{{ end -}}
+                    {{- $width := 0 -}}
+                    {{- if gt $maxCount 0 }}{{ $width = div (mul $count 100) $maxCount }}{{ end -}}
+                <div class="category-stat" data-category="{{ .name }}">
+                    <div class="category-stat-heading">
+                        <span class="category-stat-label"><span>{{ .code }}</span>{{ .name }}</span>
+                        <strong>{{ $count }}</strong>
+                    </div>
+                    <div class="category-stat-track" role="img" aria-label="{{ .name }}：{{ $count }} 篇文章"><span style="--stat-width: {{ $width }}%;"></span></div>
+                </div>
+                {{- end -}}
+            </div>
+        </section>
+
+        <section class="activity-panel" aria-labelledby="activity-title">
+            <div class="dashboard-panel-heading">
+                <span class="dashboard-kicker">CONTRIBUTION MAP</span>
+                <h3 id="activity-title">一年里的写作活跃度</h3>
+                <p id="activity-summary">每个格子代表一天，颜色越深表示当天记录越多。</p>
+            </div>
+            <div class="activity-heatmap" data-activity='{{ $activity | jsonify }}'>
+                <div class="activity-heatmap-scroll">
+                    <div class="activity-months" id="activity-months" aria-hidden="true"></div>
+                    <div class="activity-heatmap-row">
+                        <div class="activity-weekdays" aria-hidden="true">
+                            <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+                        </div>
+                        <div class="activity-grid" id="activity-grid" role="grid" aria-label="过去一年每日文章发布数量"></div>
+                    </div>
+                    <div class="activity-legend" aria-label="活跃度图例">
+                        <span>少</span>
+                        <i data-level="0" aria-hidden="true"></i>
+                        <i data-level="1" aria-hidden="true"></i>
+                        <i data-level="2" aria-hidden="true"></i>
+                        <i data-level="3" aria-hidden="true"></i>
+                        <i data-level="4" aria-hidden="true"></i>
+                        <span>多</span>
+                    </div>
+                </div>
+                <table class="activity-data-table visually-hidden" id="activity-data-table">
+                    <caption>每日文章发布数量</caption>
+                    <thead><tr><th scope="col">日期</th><th scope="col">文章数</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <div class="interaction-summary" id="site-interactions"
+        data-comments-repo="{{ $comments.repo }}"
+        data-comments-label="{{ $comments.label }}"
+        data-likes-endpoint="{{ $likes.endpoint }}"
+        data-likes-namespace="{{ $likes.namespace }}">
+        <div class="interaction-intro">
+            <span class="dashboard-kicker">COMMUNITY SIGNALS</span>
+            <h3>读者互动</h3>
+            <p>评论统计来自 GitHub Issues 驱动的 Utterances；点赞只汇总总数，不在首页展示对应文章名称。未配置共享接口时，点赞会保存在当前浏览器。</p>
+        </div>
+        <div class="interaction-metrics" aria-label="博客互动统计">
+            <div>
+                <strong id="site-comment-count">0</strong>
+                <span>条评论</span>
+            </div>
+            <div>
+                <strong id="site-like-count">0</strong>
+                <span id="site-like-label">次点赞{{ if not $likes.endpoint }} · 本设备{{ end }}</span>
+            </div>
+            <div>
+                <strong>{{ len $posts }}</strong>
+                <span>篇文章</span>
+            </div>
+        </div>
+    </div>
+</section>

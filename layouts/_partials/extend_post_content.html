@@ -1,0 +1,72 @@
+{{- $comments := site.Params.comments -}}
+{{- $likes := site.Params.likes -}}
+
+<section class="post-engagement"
+    data-post-key="{{ .RelPermalink }}"
+    data-comment-key="{{ .RelPermalink }}"
+    data-like-key="{{ .RelPermalink }}"
+    data-comments-repo="{{ $comments.repo }}"
+    data-comments-label="{{ $comments.label }}"
+    data-likes-endpoint="{{ $likes.endpoint }}"
+    data-likes-namespace="{{ $likes.namespace }}"
+    aria-labelledby="post-engagement-title">
+    <div class="post-engagement-copy">
+        <span class="dashboard-kicker">RESPOND / SAVE</span>
+        <h2 id="post-engagement-title">读到这里，有什么想法？</h2>
+        <p>留下你的看法，或者给这篇记录一个轻轻的赞。未配置共享接口时，点赞仅保存在当前浏览器。</p>
+    </div>
+    <div class="post-engagement-actions">
+        <button class="like-button" id="post-like-button" type="button" aria-pressed="false" aria-label="给这篇文章点赞">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 10v10H4a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h3Zm0 10h9.2a2 2 0 0 0 1.9-1.4l2.1-6A2 2 0 0 0 18.3 10H14l.8-4.1A2.4 2.4 0 0 0 12.4 3L7 10v10Z" />
+            </svg>
+            <span>点赞</span>
+            <strong id="post-like-count">0</strong>
+        </button>
+        <a class="comment-count-link" href="#comments" aria-label="跳到评论区">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 11.5a7.5 7.5 0 0 1-8 7.5 8.4 8.4 0 0 1-4-.9L3 20l1.6-4A7.2 7.2 0 0 1 4 11.5 7.5 7.5 0 0 1 12 4a7.5 7.5 0 0 1 8 7.5Z" />
+            </svg>
+            <span>评论</span>
+            <strong id="post-comment-count">0</strong>
+        </a>
+    </div>
+</section>
+
+{{- if and $comments.enabled (eq $comments.provider "utterances") -}}
+<section class="comments-panel" id="comments" aria-labelledby="comments-title">
+    <header class="comments-heading">
+        <div>
+            <span class="dashboard-kicker">OPEN DISCUSSION</span>
+            <h2 id="comments-title">评论区</h2>
+        </div>
+        <span>GitHub / Utterances</span>
+    </header>
+    <div class="comments-embed" id="utterances-comments" data-repo="{{ $comments.repo }}" data-issue-term="{{ $comments.issueTerm }}" data-label="{{ $comments.label }}" data-theme="{{ $comments.theme }}"></div>
+    <script>
+    (() => {
+        const target = document.getElementById('utterances-comments');
+        if (!target) return;
+        const script = document.createElement('script');
+        script.src = 'https://utteranc.es/client.js';
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        script.setAttribute('repo', target.dataset.repo);
+        script.setAttribute('issue-term', target.dataset.issueTerm || 'pathname');
+        script.setAttribute('label', target.dataset.label || 'comments');
+        script.setAttribute('theme', target.dataset.theme || 'preferred-color-scheme');
+        target.appendChild(script);
+    })();
+    </script>
+</section>
+{{- else if $comments.enabled -}}
+<section class="comments-panel comments-setup" id="comments" aria-labelledby="comments-title">
+    <header class="comments-heading">
+        <div>
+            <span class="dashboard-kicker">OPEN DISCUSSION</span>
+            <h2 id="comments-title">评论区</h2>
+        </div>
+    </header>
+    <p>评论服务尚未配置，请在站点配置中填写评论服务参数。</p>
+</section>
+{{- end -}}
