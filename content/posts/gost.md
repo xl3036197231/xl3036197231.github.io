@@ -1,5 +1,5 @@
 ---
-title: "Gost 靶机复盘"
+title: "Gost 靶机复盘 (PDF)"
 date: 2026-09-11
 draft: false
 description: "Gost 靶机过程记录，附完整 PDF。"

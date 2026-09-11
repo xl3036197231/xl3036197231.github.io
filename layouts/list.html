@@ -92,7 +92,12 @@
   {{- end }}
   {{- if not (.Param "hideMeta") }}
   <footer class="entry-footer">
-    {{- partial "post_meta.html" . -}}
+    <div class="entry-meta-wrap">
+      {{- partial "post_meta.html" . -}}
+      <a class="entry-open-link" aria-label="进入文章：{{ .Title | plainify }}" href="{{ .Permalink }}">
+        <span>打开文章</span><span aria-hidden="true">↗</span>
+      </a>
+    </div>
   </footer>
   {{- end }}
   <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>

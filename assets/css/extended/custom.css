@@ -3494,3 +3494,56 @@ html[data-theme="dark"] .hero-title-variant.title-night {
         height: 53px;
     }
 }
+
+/* Wider reading rail and an explicit article entry action. */
+.header-nav {
+    width: min(1640px, calc(100vw - clamp(48px, 8vw, 128px)));
+    max-width: none;
+}
+
+.entry-meta-wrap {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 22px;
+}
+
+.entry-open-link {
+    display: inline-flex;
+    min-height: 44px;
+    padding: 0 2px 5px;
+    align-items: center;
+    gap: 12px;
+    color: var(--template-blue);
+    border-bottom: 2px solid var(--template-blue);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    transition: color 180ms ease, border-color 180ms ease, gap 180ms ease;
+}
+
+.entry-open-link:hover,
+.entry-open-link:focus-visible {
+    color: var(--accent);
+    border-color: var(--accent);
+    gap: 16px;
+}
+
+@media (max-width: 760px) {
+    .header-nav {
+        width: auto;
+        margin-right: var(--gap);
+        margin-left: var(--gap);
+        padding-right: 16px;
+        padding-left: 16px;
+    }
+
+    .entry-meta-wrap {
+        width: 100%;
+        align-items: flex-start;
+        gap: 12px;
+    }

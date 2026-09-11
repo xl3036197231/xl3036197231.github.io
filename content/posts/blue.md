@@ -1,5 +1,5 @@
 ---
-title: "Blue 靶机复盘（未完成）"
+title: "Blue 靶机复盘（未完成） (PDF)"
 date: 2026-09-11
 draft: false
 description: "Blue 靶机记录，当前为未完成版本。"

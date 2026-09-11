@@ -1,5 +1,5 @@
 ---
-title: "Preference 靶机复盘"
+title: "Preference 靶机复盘 (PDF)"
 date: 2026-09-11
 draft: false
 description: "Preference 靶机过程记录，附完整 PDF。"
