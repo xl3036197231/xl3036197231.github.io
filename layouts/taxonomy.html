@@ -16,8 +16,8 @@
 <section class="tag-search-panel" id="tag-search-panel" aria-labelledby="tag-search-title">
     <div class="tag-search-copy">
         <span class="dashboard-kicker">REGEX INDEX</span>
-        <h2 id="tag-search-title">按标签寻找入口</h2>
-        <p>输入一个字、词或正则表达式，实时匹配包含它的全部标签。</p>
+        <h2 id="tag-search-title">标签</h2>
+        <p>支持正则搜索。</p>
     </div>
     <div class="tag-search-controls">
         <label for="tag-search-input">正则搜索
@@ -66,8 +66,7 @@
 {{- else }}
 <section class="empty-state" aria-labelledby="empty-state-title">
     <p class="empty-state-index">NO / ENTRIES YET</p>
-    <h2 id="empty-state-title">分类还在生长中。</h2>
-    <p>文章会先从标签开始整理，内容积累到合适的规模后，再形成更清晰的主题分类。</p>
+    <h2 id="empty-state-title">暂无内容。</h2>
     <a class="hero-button hero-button-secondary" href="{{ "/posts/" | relLangURL }}">
         先读最新文章 <span aria-hidden="true">→</span>
     </a>

@@ -17,7 +17,7 @@
     <header class="feed-heading open-section-heading">
         <div>
             <span class="section-index">03</span>
-            <h2 id="site-dashboard-title">内容数据总览</h2>
+            <h2 id="site-dashboard-title">站点数据</h2>
         </div>
         <span class="open-section-note">COUNT / ACTIVITY / RESPONSE</span>
     </header>
@@ -26,8 +26,7 @@
         <section class="category-chart-panel" aria-labelledby="category-chart-title">
             <div class="dashboard-panel-heading">
                 <span class="dashboard-kicker">DISTRIBUTION</span>
-                <h3 id="category-chart-title">每个方向写了多少</h3>
-                <p>文章按当前分类统计，新的内容发布后会自动进入这里。</p>
+                <h3 id="category-chart-title">分类分布</h3>
             </div>
             <div class="category-stat-list">
                 {{- range site.Params.blogCategories -}}
@@ -50,8 +49,8 @@
         <section class="activity-panel liveline-panel" aria-labelledby="activity-title">
             <div class="dashboard-panel-heading">
                 <span class="dashboard-kicker">WRITING RHYTHM</span>
-                <h3 id="activity-title">写作轨迹</h3>
-                <p id="activity-liveline-caption">用一条线看见最近一年的记录节奏；把鼠标移到曲线上查看具体日期。</p>
+                <h3 id="activity-title">写作节奏</h3>
+                <p id="activity-liveline-caption">移动到曲线上查看日期。</p>
             </div>
             <div class="liveline-chart" data-activity='{{ $activity | jsonify }}'>
                 <canvas id="activity-liveline" class="liveline-canvas" tabindex="0" role="img" aria-label="最近一年每日文章发布数量曲线" aria-describedby="activity-liveline-caption"></canvas>
@@ -103,8 +102,7 @@
         data-likes-namespace="{{ $likes.namespace }}">
         <div class="interaction-intro">
             <span class="dashboard-kicker">COMMUNITY SIGNALS</span>
-            <h3>读者互动</h3>
-            <p>评论统计来自 GitHub Issues 驱动的 Utterances；点赞只汇总总数，不在首页展示对应文章名称。未配置共享接口时，点赞会保存在当前浏览器。</p>
+            <h3>互动</h3>
         </div>
         <div class="interaction-metrics" aria-label="博客互动统计">
             <div>

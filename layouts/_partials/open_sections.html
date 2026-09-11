@@ -9,7 +9,7 @@
     <header class="feed-heading open-section-heading">
         <div>
             <span class="section-index">04</span>
-            <h2 id="learning-path-title">一条可复盘的学习路径</h2>
+            <h2 id="learning-path-title">学习路径</h2>
         </div>
         <span class="open-section-note">READ / TEST / WRITE</span>
     </header>
@@ -28,7 +28,7 @@
             </span>
             <span class="open-feature-kicker">01 / FOUNDATION</span>
             <h3>学业</h3>
-            <p>把课程、备考与长期积累的知识，整理成可以回看的学习档案。</p>
+            <p>课程、备考、学习记录。</p>
             <span class="open-feature-link">{{ if $academic }}进入分类 <span aria-hidden="true">↗</span>{{ else }}待收录 <span aria-hidden="true">·</span>{{ end }}</span>
         {{- if $academic }}</a>{{ else }}</div>{{ end }}
 
@@ -45,7 +45,7 @@
             </span>
             <span class="open-feature-kicker">02 / DECONSTRUCT</span>
             <h3>知识点笔记</h3>
-            <p>拆开工具、原理与常见题型，让零散的知识逐渐变成自己的索引。</p>
+            <p>工具、原理、常见题型。</p>
             <span class="open-feature-link">{{ if $notes }}进入分类 <span aria-hidden="true">↗</span>{{ else }}待收录 <span aria-hidden="true">·</span>{{ end }}</span>
         {{- if $notes }}</a>{{ else }}</div>{{ end }}
 
@@ -62,7 +62,7 @@
             </span>
             <span class="open-feature-kicker">03 / LABORATORY</span>
             <h3>靶机</h3>
-            <p>沿着信息收集、漏洞验证到权限提升，记录每一次动手之后的判断。</p>
+            <p>信息收集、漏洞验证、权限提升。</p>
             <span class="open-feature-link">{{ if $labs }}进入分类 <span aria-hidden="true">↗</span>{{ else }}待收录 <span aria-hidden="true">·</span>{{ end }}</span>
         {{- if $labs }}</a>{{ else }}</div>{{ end }}
 
@@ -79,7 +79,7 @@
             </span>
             <span class="open-feature-kicker">04 / WRITE-UP</span>
             <h3>CTF 题解</h3>
-            <p>把比赛与练习中的解题过程写成线索，方便未来的自己快速复盘。</p>
+            <p>比赛、练习、解题过程。</p>
             <span class="open-feature-link">{{ if $writeups }}进入分类 <span aria-hidden="true">↗</span>{{ else }}待收录 <span aria-hidden="true">·</span>{{ end }}</span>
         {{- if $writeups }}</a>{{ else }}</div>{{ end }}
     </div>
@@ -89,8 +89,8 @@
     <div class="open-workflow-panel spotlight-card">
         <div class="open-workflow-intro">
             <span class="section-index">05 / WORKFLOW</span>
-            <h2 id="workbench-title">把一次探索，变成下一次的起点。</h2>
-            <p>这个秘密花园不是单纯的文章列表，而是一套从收集到验证、再到表达的个人工作台。</p>
+            <h2 id="workbench-title">我的记录方式</h2>
+            <p>收集 → 验证 → 表达。</p>
             <div class="open-stats" aria-label="博客统计">
                 <div>
                     <strong>{{ $postCount }}</strong>
@@ -112,21 +112,21 @@
                 <span class="open-step-number">01</span>
                 <div>
                     <strong>收集</strong>
-                    <p>留下问题、线索和当下还没有答案的部分。</p>
+                    <p>问题、线索和答案。</p>
                 </div>
             </li>
             <li class="open-workflow-step">
                 <span class="open-step-number">02</span>
                 <div>
                     <strong>验证</strong>
-                    <p>在课程、靶机和 CTF 环境里动手，把猜想变成证据。</p>
+                    <p>动手验证，留下证据。</p>
                 </div>
             </li>
             <li class="open-workflow-step">
                 <span class="open-step-number">03</span>
                 <div>
                     <strong>表达</strong>
-                    <p>把过程整理成文章、题解或一份可持续更新的笔记。</p>
+                    <p>整理成文章或笔记。</p>
                 </div>
             </li>
         </ol>
@@ -136,7 +136,7 @@
 <section class="open-cta spotlight-card" aria-labelledby="open-cta-title">
     <div>
         <span class="section-index">NEXT / KEEP GOING</span>
-        <h2 id="open-cta-title">从一个问题开始，慢慢把它讲清楚。</h2>
+        <h2 id="open-cta-title">继续逛逛。</h2>
     </div>
     <div class="open-cta-actions">
         <a class="hero-button hero-button-primary" href="{{ "/posts/" | relLangURL }}">
