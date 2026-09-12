@@ -2,3 +2,12 @@
 <link rel="preload" href="{{ "/fonts/libre-bodoni-latin-italic.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{{ "/fonts/public-sans-latin.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{{ "/fonts/nacelle-semibold.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+<script>
+    (() => {
+        try {
+            document.documentElement.dataset.ambient = localStorage.getItem('xiaoxing-ambient') === 'off' ? 'off' : 'on';
+        } catch (error) {
+            document.documentElement.dataset.ambient = 'on';
+        }
+    })();
+</script>

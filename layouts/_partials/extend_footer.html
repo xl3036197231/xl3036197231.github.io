@@ -18,26 +18,32 @@
     const root = document.documentElement;
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const pointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const toggle = document.getElementById('ambient-toggle');
 
     if (!canvas) return;
 
     const context = canvas.getContext('2d');
     if (!context) return;
 
+    const storageKey = 'xiaoxing-ambient';
     let width = 0;
     let height = 0;
     let devicePixelRatio = 1;
     let particles = [];
     let frameId = 0;
     let lastTime = 0;
+    let lastPaint = 0;
+    let resizeFrame = 0;
     let pointerX = -1000;
     let pointerY = -1000;
     let pointerActive = false;
 
     const isDark = () => root.dataset.theme === 'dark';
+    const isEnabled = () => root.dataset.ambient !== 'off' && !motionQuery.matches;
+    const clearCanvas = () => context.clearRect(0, 0, width, height);
 
     const resizeCanvas = () => {
-        devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+        devicePixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
         width = window.innerWidth;
         height = window.innerHeight;
         canvas.width = Math.floor(width * devicePixelRatio);
@@ -48,8 +54,9 @@
 
     const rebuildParticles = () => {
         const night = isDark();
-        const minimum = night ? 32 : 48;
-        const maximum = night ? 68 : 110;
+        const compact = width < 720;
+        const minimum = night ? (compact ? 16 : 28) : (compact ? 24 : 42);
+        const maximum = night ? (compact ? 34 : 62) : (compact ? 48 : 88);
         const count = Math.min(maximum, Math.max(minimum, Math.round(width / (night ? 24 : 14))));
 
         particles = Array.from({ length: count }, () => ({
@@ -81,12 +88,12 @@
         particle.velocityY += distanceY / distance * impulse;
     };
 
-    const drawSnowflake = (particle, time) => {
+    const drawSnowflake = (particle, alpha, time) => {
         const radius = particle.radius * 2.2;
         context.save();
         context.translate(particle.x, particle.y);
         context.rotate(particle.phase + time * 0.00035);
-        context.strokeStyle = 'rgba(148, 163, 184, ' + particle.alpha + ')';
+        context.strokeStyle = 'rgba(148, 163, 184, ' + alpha + ')';
         context.lineWidth = Math.max(0.8, particle.radius * 0.42);
         context.lineCap = 'round';
 
@@ -105,13 +112,18 @@
     };
 
     const render = (time) => {
-        if (document.hidden) {
+        if (document.hidden || !isEnabled()) {
             frameId = 0;
             return;
         }
 
+        frameId = window.requestAnimationFrame(render);
+        const frameInterval = width < 720 ? 1000 / 24 : 1000 / 30;
+        if (time - lastPaint < frameInterval) return;
+
         const delta = Math.min((time - lastTime) / 16.67 || 1, 2);
         lastTime = time;
+        lastPaint = time;
         const night = isDark();
 
         context.clearRect(0, 0, width, height);
@@ -147,16 +159,15 @@
                 context.fillStyle = 'rgba(226, 232, 240, ' + shimmer + ')';
                 context.fill();
             } else {
-                drawSnowflake({ ...particle, alpha: shimmer }, time);
+                drawSnowflake(particle, shimmer, time);
             }
         });
-
-        frameId = window.requestAnimationFrame(render);
     };
 
     const start = () => {
-        if (!motionQuery.matches && !frameId) {
+        if (isEnabled() && !document.hidden && !frameId) {
             lastTime = performance.now();
+            lastPaint = 0;
             frameId = window.requestAnimationFrame(render);
         }
     };
@@ -180,7 +191,41 @@
         pointerY = -1000;
     };
 
+    const syncToggle = () => {
+        if (!toggle) return;
+        const enabled = root.dataset.ambient !== 'off';
+        toggle.setAttribute('aria-pressed', String(enabled));
+        toggle.disabled = motionQuery.matches;
+        const label = motionQuery.matches
+            ? '系统已开启减少动态效果'
+            : enabled ? '关闭飘雪与星光' : '开启飘雪与星光';
+        toggle.setAttribute('aria-label', label);
+        toggle.title = label;
+    };
+
+    const setAmbient = (enabled) => {
+        root.dataset.ambient = enabled ? 'on' : 'off';
+        try { localStorage.setItem(storageKey, enabled ? 'on' : 'off'); } catch (error) {}
+        syncToggle();
+        if (enabled) {
+            rebuildParticles();
+            start();
+        } else {
+            pause();
+            clearCanvas();
+        }
+    };
+
+    const scheduleResize = () => {
+        if (resizeFrame) return;
+        resizeFrame = window.requestAnimationFrame(() => {
+            resizeFrame = 0;
+            resizeCanvas();
+        });
+    };
+
     resizeCanvas();
+    syncToggle();
     start();
 
     if (pointerQuery.matches) {
@@ -189,7 +234,11 @@
         document.documentElement.addEventListener('mouseleave', clearPointer);
     }
 
-    window.addEventListener('resize', resizeCanvas, { passive: true });
+    toggle?.addEventListener('click', () => {
+        setAmbient(root.dataset.ambient === 'off');
+    });
+
+    window.addEventListener('resize', scheduleResize, { passive: true });
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) pause();
         else start();
@@ -198,13 +247,17 @@
     motionQuery.addEventListener?.('change', () => {
         if (motionQuery.matches) {
             pause();
-            context.clearRect(0, 0, width, height);
+            clearCanvas();
         } else {
             start();
         }
+        syncToggle();
     });
 
-    new MutationObserver(rebuildParticles).observe(root, {
+    new MutationObserver(() => {
+        rebuildParticles();
+        if (!frameId) clearCanvas();
+    }).observe(root, {
         attributes: true,
         attributeFilter: ['data-theme']
     });
@@ -283,11 +336,17 @@
     const heatmap = document.querySelector('.activity-heatmap');
     if (!heatmap) return;
 
+    const details = heatmap.closest('details');
     const grid = heatmap.querySelector('#activity-grid');
     const months = heatmap.querySelector('#activity-months');
     const tableBody = heatmap.querySelector('#activity-data-table tbody');
     const summary = document.getElementById('activity-summary');
     if (!grid || !months) return;
+
+    let built = false;
+    const buildHeatmap = () => {
+        if (built) return;
+        built = true;
 
     let activity = [];
     try {
@@ -324,19 +383,18 @@
     let cursor = new Date(start);
     let column = 0;
     let activeDays = 0;
+    const gridFragment = document.createDocumentFragment();
+    const tableFragment = document.createDocumentFragment();
 
     while (true) {
         const key = toKey(cursor);
         const count = counts.get(key) || 0;
         const level = count === 0 ? 0 : count === 1 ? 1 : count <= 3 ? 2 : count <= 5 ? 3 : 4;
-        const cell = document.createElement('button');
-        cell.type = 'button';
+        const cell = document.createElement('span');
         cell.className = 'activity-cell';
         cell.dataset.level = String(level);
-        cell.setAttribute('role', 'gridcell');
-        cell.setAttribute('aria-label', formatDate(cursor) + '，' + count + ' 篇文章');
         cell.title = formatDate(cursor) + ' · ' + count + ' 篇文章';
-        grid.appendChild(cell);
+        gridFragment.appendChild(cell);
 
         if (tableBody && cursor <= end) {
             const row = document.createElement('tr');
@@ -346,7 +404,7 @@
             dateCell.textContent = formatDate(cursor);
             countCell.textContent = String(count);
             row.append(dateCell, countCell);
-            tableBody.appendChild(row);
+            tableFragment.appendChild(row);
         }
 
         if (count > 0 && cursor <= end) activeDays += 1;
@@ -359,16 +417,26 @@
         cursor.setDate(cursor.getDate() + 1);
     }
 
+    grid.appendChild(gridFragment);
+    if (tableBody) tableBody.appendChild(tableFragment);
+    const monthFragment = document.createDocumentFragment();
     monthLabels.forEach((month) => {
         const label = document.createElement('span');
         label.textContent = month.label;
         label.style.gridColumn = String(month.column);
-        months.appendChild(label);
+        monthFragment.appendChild(label);
     });
+    months.appendChild(monthFragment);
 
     if (summary) {
         summary.textContent = activeDays + ' 天有文章记录 · ' + activity.length + ' 篇文章 · 最近一年';
     }
+    };
+
+    if (details?.open) buildHeatmap();
+    details?.addEventListener('toggle', () => {
+        if (details.open) buildHeatmap();
+    }, { once: true });
 })();
 </script>
 
@@ -428,11 +496,31 @@
         return path || '/';
     };
 
+    const readCommentCache = (key) => {
+        try {
+            const cached = JSON.parse(sessionStorage.getItem(key) || 'null');
+            if (cached && Date.now() - cached.savedAt < 10 * 60 * 1000 && Array.isArray(cached.issues)) {
+                return cached.issues;
+            }
+        } catch (error) {}
+        return null;
+    };
+
+    const writeCommentCache = (key, issues) => {
+        try {
+            sessionStorage.setItem(key, JSON.stringify({ savedAt: Date.now(), issues }));
+        } catch (error) {}
+    };
+
     const loadCommentIssues = async (root) => {
         if (!root) return [];
         const repo = root.dataset.commentsRepo;
         const label = root.dataset.commentsLabel || 'comments';
         if (!repo) return [];
+        const cacheKey = 'xiaoxing-comments:' + repo + ':' + label;
+        const cached = readCommentCache(cacheKey);
+        if (cached) return cached;
+
         const issues = [];
         for (let page = 1; page <= 3; page += 1) {
             const url = 'https://api.github.com/repos/' + repo + '/issues?state=all&labels=' + encodeURIComponent(label) + '&per_page=100&page=' + page;
@@ -442,6 +530,7 @@
             issues.push(...batch.filter((issue) => !issue.pull_request));
             if (batch.length < 100) break;
         }
+        writeCommentCache(cacheKey, issues);
         return issues;
     };
 
@@ -521,7 +610,17 @@
 
     if (postRoot) syncPostLike(postRoot);
     syncSiteLikes();
-    refreshCommentCounts();
+    const commentTarget = interactionRoot || postRoot;
+    if (commentTarget && 'IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            if (!entries.some((entry) => entry.isIntersecting)) return;
+            observer.disconnect();
+            refreshCommentCounts();
+        }, { rootMargin: '240px 0px' });
+        observer.observe(commentTarget);
+    } else {
+        refreshCommentCounts();
+    }
 })();
 </script>
 
@@ -606,6 +705,9 @@
     let devicePixelRatio = 1;
     let pulse = 0;
     let frameId = 0;
+    let lastFrameTime = 0;
+    let isVisible = !('IntersectionObserver' in window);
+    let geometryCache = null;
 
     try {
         activity = JSON.parse(chart.dataset.activity || '[]');
@@ -678,10 +780,12 @@
         canvas.style.width = width + 'px';
         canvas.style.height = height + 'px';
         context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+        geometryCache = null;
         draw();
     };
 
     const geometry = () => {
+        if (geometryCache) return geometryCache;
         const padding = layout();
         const maxCount = Math.max(1, ...points.map((point) => point.count));
         const chartWidth = Math.max(1, width - padding.left - padding.right);
@@ -691,7 +795,8 @@
             x: padding.left + (index / Math.max(1, points.length - 1)) * chartWidth,
             y: padding.top + chartHeight - (point.count / maxCount) * chartHeight
         }));
-        return { padding, maxCount, chartWidth, chartHeight, plotted };
+        geometryCache = { padding, maxCount, chartWidth, chartHeight, plotted };
+        return geometryCache;
     };
 
     const setBadge = (index) => {
@@ -882,18 +987,23 @@
         draw();
     });
 
-    const animate = () => {
-        if (document.hidden || motionQuery.matches) {
+    const animate = (time) => {
+        if (document.hidden || motionQuery.matches || !isVisible) {
             frameId = 0;
             return;
         }
+        frameId = window.requestAnimationFrame(animate);
+        if (time - lastFrameTime < 1000 / 30) return;
+        lastFrameTime = time;
         pulse += 0.06;
         draw();
-        frameId = window.requestAnimationFrame(animate);
     };
 
     const start = () => {
-        if (!motionQuery.matches && !frameId) frameId = window.requestAnimationFrame(animate);
+        if (isVisible && !document.hidden && !motionQuery.matches && !frameId) {
+            lastFrameTime = 0;
+            frameId = window.requestAnimationFrame(animate);
+        }
     };
 
     const stop = () => {
@@ -907,6 +1017,13 @@
     setBadge(currentIndex);
     start();
     new ResizeObserver(resize).observe(chart);
+    if ('IntersectionObserver' in window) {
+        new IntersectionObserver((entries) => {
+            isVisible = entries.some((entry) => entry.isIntersecting);
+            if (isVisible) start();
+            else stop();
+        }, { rootMargin: '120px 0px' }).observe(chart);
+    }
     new MutationObserver(draw).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
     document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
     motionQuery.addEventListener?.('change', () => {

@@ -46,6 +46,14 @@
 {{- end }}
 
 {{- $paginator := .Paginate $pages }}
+{{- if and .IsHome (gt $paginator.PageNumber 1) }}
+<header class="page-header pagination-page-header">
+  <span class="caps-label">CONTINUE READING</span>
+  <h1>文章列表 · 第 {{ $paginator.PageNumber }} 页</h1>
+  <p class="post-description">继续翻阅拾光花园里的文章记录。</p>
+</header>
+{{- end }}
+
 {{- $homeShell := and .IsHome site.Params.homeInfoParams (eq $paginator.PageNumber 1) }}
 {{- $editorialShell := or $homeShell (and (not .IsHome) (or (eq .Kind "section") (eq .Kind "term") (eq .Kind "taxonomy"))) }}
 

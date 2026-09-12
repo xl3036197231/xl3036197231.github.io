@@ -179,6 +179,18 @@ iframe {
         radial-gradient(circle at 92% 72%, color-mix(in srgb, var(--border) 28%, transparent), transparent 34%);
 }
 
+:root[data-ambient="off"] .ambient-sky canvas {
+    display: none;
+}
+
+:root[data-ambient="off"] .ambient-sky {
+    opacity: 0.34;
+}
+
+:root[data-ambient="off"] .ambient-moon {
+    opacity: 0.62;
+}
+
 .ambient-sky canvas {
     display: block;
     width: 100%;
@@ -381,10 +393,49 @@ button:focus-visible {
     box-shadow: 0 0 0 5px color-mix(in srgb, var(--template-violet) 18%, transparent), 0 0 20px color-mix(in srgb, var(--template-blue) 28%, transparent);
 }
 
-.theme-toggle {
+.theme-toggle,
+.ambient-toggle {
+    position: relative;
+    display: inline-grid;
     min-width: 44px;
     min-height: 44px;
+    padding: 0;
     cursor: pointer;
+    color: var(--secondary);
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    place-items: center;
+    transition: color 180ms ease, background 180ms ease, opacity 180ms ease;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible,
+.ambient-toggle:hover,
+.ambient-toggle:focus-visible {
+    color: var(--primary);
+    background: color-mix(in srgb, var(--template-blue) 10%, transparent);
+}
+
+.ambient-toggle[aria-pressed="false"]::after {
+    position: absolute;
+    width: 22px;
+    height: 2px;
+    content: "";
+    transform: rotate(-45deg);
+    border-radius: 999px;
+    background: currentColor;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--theme) 76%, transparent);
+}
+
+.ambient-toggle:disabled {
+    cursor: not-allowed;
+    opacity: 0.46;
+}
+
+.pagination a {
+    min-height: 44px;
+    line-height: 44px;
 }
 
 .menu {
@@ -2350,10 +2401,9 @@ details.toc {
 }
 
 .activity-cell {
+    display: block;
     width: 13px;
     height: 13px;
-    padding: 0;
-    cursor: pointer;
     border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
     border-radius: 3px;
     background: color-mix(in srgb, var(--border) 38%, var(--entry));
@@ -2375,8 +2425,7 @@ details.toc {
     background: linear-gradient(135deg, var(--template-blue), var(--template-violet));
 }
 
-.activity-cell:hover,
-.activity-cell:focus-visible {
+.activity-cell:hover {
     outline: 3px solid color-mix(in srgb, var(--accent) 50%, transparent);
     outline-offset: 2px;
 }
@@ -3084,7 +3133,7 @@ body {
 
 .sidebar-tag-list a {
     display: inline-flex;
-    min-height: 32px;
+    min-height: 44px;
     padding: 0 9px;
     color: var(--secondary);
     border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
@@ -3134,6 +3183,7 @@ body {
 .sidebar-recent-list a {
     display: grid;
     min-width: 0;
+    min-height: 44px;
     padding: 12px 0;
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 12px;

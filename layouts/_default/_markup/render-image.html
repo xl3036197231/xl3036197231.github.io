@@ -1,0 +1,37 @@
+{{- $u := urls.Parse .Destination -}}
+{{- $src := $u.String -}}
+{{- $resource := false -}}
+{{- if not $u.IsAbs -}}
+  {{- $path := strings.TrimPrefix "./" $u.Path -}}
+  {{- with or (.PageInner.Resources.Get $path) (resources.Get $path) -}}
+    {{- $resource = . -}}
+    {{- $src = .RelPermalink -}}
+    {{- with $u.RawQuery -}}
+      {{- $src = printf "%s?%s" $src . -}}
+    {{- end -}}
+    {{- with $u.Fragment -}}
+      {{- $src = printf "%s#%s" $src . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $alt := strings.TrimSpace .Text -}}
+{{- if not $alt -}}
+  {{- $alt = printf "%s 操作截图 %d" (.Page.Title | plainify) (add .Ordinal 1) -}}
+{{- end -}}
+{{- $attributes := merge .Attributes (dict
+  "alt" $alt
+  "src" $src
+  "title" (.Title | transform.HTMLEscape)
+  "loading" "lazy"
+  "decoding" "async"
+) -}}
+{{- with $resource -}}
+  {{- $attributes = merge $attributes (dict "width" (printf "%d" .Width) "height" (printf "%d" .Height)) -}}
+{{- end -}}
+<img
+  {{- range $k, $v := $attributes -}}
+    {{- if $v -}}
+      {{- printf " %s=%q" $k $v | safeHTMLAttr -}}
+    {{- end -}}
+  {{- end -}}>
+{{- /**/ -}}
