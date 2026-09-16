@@ -273,8 +273,8 @@ a.category-word:focus-visible small {
 
 .post-reading-grid {
     display: grid;
-    grid-template-columns: minmax(176px, 220px) minmax(0, 760px);
-    gap: clamp(24px, 4vw, 64px);
+    grid-template-columns: minmax(184px, 220px) minmax(0, 940px);
+    gap: clamp(32px, 4vw, 64px);
     align-items: start;
     justify-content: center;
 }
