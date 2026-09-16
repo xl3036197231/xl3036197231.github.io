@@ -1,0 +1,219 @@
+<script>
+(() => {
+    const clouds = [...document.querySelectorAll('[data-packed-cloud]')];
+    if (!clouds.length) return;
+
+    const hashText = (value) => {
+        let hash = 2166136261;
+        for (let index = 0; index < value.length; index += 1) {
+            hash ^= value.charCodeAt(index);
+            hash = Math.imul(hash, 16777619);
+        }
+        return hash >>> 0;
+    };
+
+    const overlaps = (candidate, placed, gap) => placed.some((box) => !(
+        candidate.right + gap <= box.left ||
+        candidate.left >= box.right + gap ||
+        candidate.bottom + gap <= box.top ||
+        candidate.top >= box.bottom + gap
+    ));
+
+    clouds.forEach((cloud) => {
+        const stage = cloud.querySelector('[data-cloud-stage]');
+        const words = [...cloud.querySelectorAll('[data-cloud-item]')];
+        if (!stage || !words.length) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        let hasEnteredViewport = !('IntersectionObserver' in window);
+        let fontMetricsReady = !document.fonts?.ready;
+        let lastWidth = 0;
+        let lastHeight = 0;
+        let resizeFrame = 0;
+
+        const resetWord = (word) => {
+            word.style.removeProperty('font-size');
+            word.style.removeProperty('left');
+            word.style.removeProperty('top');
+            word.style.removeProperty('transform');
+            word.style.removeProperty('z-index');
+            word.querySelector('small')?.style.removeProperty('transform');
+        };
+
+        const layout = () => {
+            if (!hasEnteredViewport || !fontMetricsReady) return;
+            const width = Math.floor(stage.getBoundingClientRect().width);
+            const height = Math.floor(stage.getBoundingClientRect().height);
+            if (width < 240 || height < 260) return;
+
+            lastWidth = width;
+            lastHeight = height;
+            cloud.classList.remove('is-packed');
+            cloud.classList.add('is-packing');
+            words.forEach(resetWord);
+
+            const compact = width < 480 || window.innerHeight < 500;
+            const maxCount = Math.max(1, ...words.map((word) => Number(word.dataset.cloudCount) || 0));
+            const minFont = compact ? 14 : 16;
+            const maxFont = compact ? 42 : 82;
+            const padding = compact ? 12 : 16;
+            const centerX = width / 2;
+            const centerY = height / 2;
+
+            const entries = words.map((word) => {
+                const count = Number(word.dataset.cloudCount) || 0;
+                const ratio = Math.log2(count + 1) / Math.log2(maxCount + 1);
+                const isCategory = word.dataset.cloudKind === 'category';
+                const categoryFloor = minFont + (isCategory ? (compact ? 3 : 6) : 0);
+                const ceiling = maxFont - (isCategory ? 0 : (compact ? 8 : 12));
+                let fontSize = count === 0
+                    ? categoryFloor
+                    : categoryFloor + ratio * Math.max(0, ceiling - categoryFloor);
+                word.style.fontSize = Math.round(fontSize) + 'px';
+
+                const maximumWordWidth = width * (compact ? 0.66 : 0.72);
+                const measuredWidth = word.getBoundingClientRect().width;
+                if (measuredWidth > maximumWordWidth) {
+                    fontSize = Math.max(minFont, fontSize * maximumWordWidth / measuredWidth);
+                    word.style.fontSize = Math.round(fontSize) + 'px';
+                }
+
+                return {
+                    word,
+                    count,
+                    fontSize,
+                    hash: hashText(word.dataset.cloudName || word.textContent || ''),
+                    rotation: 0
+                };
+            }).sort((left, right) => right.fontSize - left.fontSize || right.count - left.count || left.hash - right.hash);
+
+            entries.forEach((entry, index) => {
+                const shortWord = (entry.word.dataset.cloudName || '').length <= 5;
+                const allowRotation = index > 3 && shortWord && entry.hash % (compact ? 13 : 6) === 0;
+                entry.rotation = allowRotation ? (entry.hash % 2 ? 90 : -90) : 0;
+            });
+
+            let failed = true;
+            for (let layoutAttempt = 0; layoutAttempt < 6 && failed; layoutAttempt += 1) {
+                const placed = [];
+                const globalScale = Math.pow(0.87, layoutAttempt);
+                failed = false;
+
+                for (const entry of entries) {
+                    entry.word.style.removeProperty('left');
+                    entry.word.style.removeProperty('top');
+                    entry.word.style.transform = 'none';
+                    const scaledFont = Math.max(minFont, entry.fontSize * globalScale);
+                    entry.word.style.fontSize = Math.round(scaledFont) + 'px';
+                    const rect = entry.word.getBoundingClientRect();
+                    const rotation = (compact && layoutAttempt > 0) || layoutAttempt > 2 ? 0 : entry.rotation;
+                    const rotated = Math.abs(rotation) === 90;
+                    const boxWidth = (rotated ? rect.height : rect.width) + 2;
+                    const boxHeight = (rotated ? rect.width : rect.height) + 2;
+                    let found = null;
+
+                    for (let step = 0; step < 3200; step += 1) {
+                        const angle = step * 0.47 + (entry.hash % 31) * 0.03;
+                        const radius = 4.7 * Math.sqrt(step);
+                        const x = centerX + Math.cos(angle) * radius * 1.08;
+                        const y = centerY + Math.sin(angle) * radius;
+                        const candidate = {
+                            left: x - boxWidth / 2,
+                            right: x + boxWidth / 2,
+                            top: y - boxHeight / 2,
+                            bottom: y + boxHeight / 2
+                        };
+
+                        if (
+                            candidate.left < padding || candidate.right > width - padding ||
+                            candidate.top < padding || candidate.bottom > height - padding ||
+                            overlaps(candidate, placed, layoutAttempt > 3 ? 0 : (compact ? 1 : 2))
+                        ) continue;
+
+                        found = { x, y, rect, candidate, rotation };
+                        break;
+                    }
+
+                    if (!found) {
+                        failed = true;
+                        break;
+                    }
+
+                    entry.word.style.left = found.x - found.rect.width / 2 + 'px';
+                    entry.word.style.top = found.y - found.rect.height / 2 + 'px';
+                    entry.word.style.transform = 'rotate(' + found.rotation + 'deg)';
+                    entry.word.style.zIndex = String(2 + Math.min(8, entry.count));
+                    const badge = entry.word.querySelector('small');
+                    if (badge) badge.style.transform = 'translateX(-50%) rotate(' + (-found.rotation) + 'deg)';
+                    placed.push(found.candidate);
+                }
+
+                if (!failed) {
+                    const renderedBoxes = [];
+                    for (const entry of entries) {
+                        const rect = entry.word.getBoundingClientRect();
+                        const rendered = {
+                            left: rect.left,
+                            right: rect.right,
+                            top: rect.top,
+                            bottom: rect.bottom
+                        };
+                        if (overlaps(rendered, renderedBoxes, 0)) {
+                            failed = true;
+                            break;
+                        }
+                        renderedBoxes.push(rendered);
+                    }
+                }
+            }
+
+            cloud.classList.remove('is-packing');
+            if (failed) {
+                words.forEach(resetWord);
+                cloud.classList.remove('is-packed');
+            } else {
+                cloud.classList.add('is-packed');
+            }
+        };
+
+        const scheduleLayout = (force = false) => {
+            if (resizeFrame) return;
+            resizeFrame = window.requestAnimationFrame(() => {
+                resizeFrame = 0;
+                const width = Math.floor(stage.getBoundingClientRect().width);
+                const height = Math.floor(stage.getBoundingClientRect().height);
+                if (force || Math.abs(width - lastWidth) > 3 || Math.abs(height - lastHeight) > 3) layout();
+            });
+        };
+
+        const start = () => {
+            hasEnteredViewport = true;
+            if (document.fonts?.ready) {
+                document.fonts.ready.then(() => {
+                    fontMetricsReady = true;
+                    scheduleLayout(true);
+                }, () => {
+                    fontMetricsReady = true;
+                    scheduleLayout(true);
+                });
+            } else {
+                fontMetricsReady = true;
+                scheduleLayout(true);
+            }
+        };
+
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries) => {
+                if (!entries.some((entry) => entry.isIntersecting)) return;
+                observer.disconnect();
+                start();
+            }, { rootMargin: '320px 0px' });
+            observer.observe(stage);
+        } else {
+            start();
+        }
+
+        new ResizeObserver(() => scheduleLayout()).observe(stage);
+    });
+})();
+</script>
