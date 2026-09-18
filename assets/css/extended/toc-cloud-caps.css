@@ -469,3 +469,45 @@ a.category-word:focus-visible small {
         text-shadow: none;
     }
 }
+
+/* Give the short note itself the same handwritten-editorial voice as its title. */
+.life-note-article .post-content {
+    max-width: 760px;
+    margin: clamp(42px, 7vw, 80px) auto;
+    color: var(--primary);
+    font-family: var(--display-font);
+    font-size: clamp(20px, 2.25vw, 29px);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 2;
+}
+
+.life-note-article .post-content > p {
+    margin: 0;
+    text-wrap: pretty;
+}
+
+.life-note-article .post-content > p + p {
+    margin-top: clamp(24px, 4vw, 42px);
+}
+
+.life-note-article .post-content > p:first-child::first-letter {
+    float: left;
+    margin: 0.12em 0.12em 0 0;
+    color: var(--accent);
+    font-size: 2.6em;
+    font-weight: 600;
+    line-height: 0.78;
+}
+
+@media (max-width: 640px) {
+    .life-note-article .post-content {
+        margin: 38px 0;
+        font-size: clamp(19px, 5.4vw, 23px);
+        line-height: 1.9;
+    }
+
+    .life-note-article .post-content > p:first-child::first-letter {
+        font-size: 2.25em;
+    }
+}
