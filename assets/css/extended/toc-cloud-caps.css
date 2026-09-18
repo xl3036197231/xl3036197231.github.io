@@ -396,3 +396,76 @@ a.category-word:focus-visible small {
         margin-bottom: 30px;
     }
 }
+
+/* Life notes use a large editorial display treatment while keeping the body readable. */
+.life-note-article .post-header {
+    position: relative;
+    overflow: hidden;
+    margin-top: clamp(12px, 3vw, 32px);
+    padding: clamp(44px, 8vw, 96px) clamp(18px, 3vw, 48px) clamp(38px, 6vw, 72px);
+    border-top: 10px solid var(--accent);
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border));
+    background:
+        radial-gradient(circle at 88% 18%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 30%),
+        radial-gradient(circle at 14% 96%, color-mix(in srgb, var(--template-violet) 10%, transparent), transparent 36%),
+        color-mix(in srgb, var(--entry) 84%, transparent);
+}
+
+.life-note-article .post-header::after {
+    position: absolute;
+    top: clamp(18px, 2.4vw, 30px);
+    right: clamp(18px, 3vw, 48px);
+    content: "LIFE NOTE / 随记";
+    color: color-mix(in srgb, var(--accent) 72%, var(--primary));
+    font-family: var(--caps-font);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+}
+
+.life-note-article .post-title {
+    max-width: 1080px;
+    padding-left: clamp(16px, 2.5vw, 32px);
+    border-left: clamp(4px, 0.55vw, 8px) solid var(--accent);
+    color: var(--primary);
+    font-family: var(--display-font);
+    font-size: clamp(56px, 8.5vw, 124px);
+    font-weight: 600;
+    letter-spacing: -0.06em;
+    line-height: 0.98;
+    text-shadow: 0 3px 0 color-mix(in srgb, var(--accent) 13%, transparent);
+}
+
+.life-note-article .post-description {
+    max-width: 38ch;
+    margin-top: clamp(24px, 3vw, 36px);
+    color: var(--secondary);
+    font-family: var(--display-font);
+    font-size: clamp(18px, 2.2vw, 25px);
+    line-height: 1.55;
+}
+
+@media (max-width: 640px) {
+    .life-note-article .post-header {
+        padding-top: 58px;
+        border-top-width: 7px;
+    }
+
+    .life-note-article .post-header::after {
+        right: 18px;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+    }
+
+    .life-note-article .post-title {
+        padding-left: 14px;
+        font-size: clamp(44px, 14vw, 72px);
+        letter-spacing: -0.045em;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .life-note-article .post-title {
+        text-shadow: none;
+    }
+}
