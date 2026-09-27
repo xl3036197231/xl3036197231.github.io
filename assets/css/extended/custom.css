@@ -3902,6 +3902,17 @@ html[data-theme="dark"] .hero-title-variant.title-night {
     }
 }
 
+/* Keep protected article content out of sight until the access check succeeds. */
+html.mazesec-locked .post-single {
+    visibility: hidden;
+    pointer-events: none;
+    user-select: none;
+}
+
+html.mazesec-locked {
+    overflow: hidden;
+}
+
 /* MazeSec article access check. */
 .mazesec-gate-dialog {
     width: min(92vw, 460px);

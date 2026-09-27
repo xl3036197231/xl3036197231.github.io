@@ -1149,7 +1149,8 @@
         }
     };
 
-    const isRestrictedArticle = (anchor) => restrictedPaths.has(normalizePath(anchor.href));
+    const isRestrictedPath = (value) => restrictedPaths.has(normalizePath(value));
+    const isRestrictedArticle = (anchor) => isRestrictedPath(anchor.href);
     let dialog;
     let input;
     let error;
@@ -1236,6 +1237,10 @@
         dialog.showModal();
         window.setTimeout(() => input.focus(), 0);
     };
+
+    if (isRestrictedPath(window.location.href) && !hasArticleAccess(window.location.href)) {
+        window.setTimeout(() => openDialog(window.location.href, null), 0);
+    }
 
     document.addEventListener('click', (event) => {
         if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;

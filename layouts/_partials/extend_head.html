@@ -11,3 +11,34 @@
         }
     })();
 </script>
+{{- if in (.Params.categories | default (slice)) "靶机" }}
+<script>
+    (() => {
+        const normalizePath = (value) => {
+            let url;
+            try {
+                url = new URL(value, window.location.href);
+            } catch (_) {
+                return '';
+            }
+            let path = url.pathname || '/';
+            try {
+                path = decodeURIComponent(path);
+            } catch (_) {
+                // Keep the encoded path when it contains a malformed escape.
+            }
+            path = path.replace(/\/+$/, '/');
+            return path || '/';
+        };
+
+        const key = 'xiaoxing-mazesec-access:' + encodeURIComponent(normalizePath(window.location.href));
+        try {
+            if (localStorage.getItem(key) !== 'granted') {
+                document.documentElement.classList.add('mazesec-locked');
+            }
+        } catch (_) {
+            document.documentElement.classList.add('mazesec-locked');
+        }
+    })();
+</script>
+{{- end }}
