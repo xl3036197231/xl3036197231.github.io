@@ -23,7 +23,6 @@
         const stage = cloud.querySelector('[data-cloud-stage]');
         const words = [...cloud.querySelectorAll('[data-cloud-item]')];
         if (!stage || !words.length) return;
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
         let hasEnteredViewport = !('IntersectionObserver' in window);
         let fontMetricsReady = !document.fonts?.ready;
@@ -51,6 +50,8 @@
             cloud.classList.remove('is-packed');
             cloud.classList.add('is-packing');
             words.forEach(resetWord);
+            cloud.classList.remove('is-fallback');
+            stage.style.removeProperty('min-height');
 
             const compact = width < 480 || window.innerHeight < 500;
             const maxCount = Math.max(1, ...words.map((word) => Number(word.dataset.cloudCount) || 0));
@@ -93,8 +94,9 @@
                 entry.rotation = allowRotation ? (entry.hash % 2 ? 90 : -90) : 0;
             });
 
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             let failed = true;
-            for (let layoutAttempt = 0; layoutAttempt < 6 && failed; layoutAttempt += 1) {
+            for (let layoutAttempt = 0; layoutAttempt < 9 && failed && !reducedMotion; layoutAttempt += 1) {
                 const placed = [];
                 const globalScale = Math.pow(0.87, layoutAttempt);
                 failed = false;
@@ -112,9 +114,10 @@
                     const boxHeight = (rotated ? rect.width : rect.height) + 2;
                     let found = null;
 
-                    for (let step = 0; step < 3200; step += 1) {
-                        const angle = step * 0.47 + (entry.hash % 31) * 0.03;
-                        const radius = 4.7 * Math.sqrt(step);
+                    for (let step = 0; step < 4200; step += 1) {
+                        const jitter = ((entry.hash >>> 8) % 1000) / 1000 - 0.5;
+                        const angle = step * 0.47 + (entry.hash % 31) * 0.03 + jitter * 0.16;
+                        const radius = 4.7 * Math.sqrt(step) + jitter * 7;
                         const x = centerX + Math.cos(angle) * radius * 1.08;
                         const y = centerY + Math.sin(angle) * radius;
                         const candidate = {
@@ -169,8 +172,59 @@
 
             cloud.classList.remove('is-packing');
             if (failed) {
-                words.forEach(resetWord);
-                cloud.classList.remove('is-packed');
+                cloud.classList.add('is-packing');
+                const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+                const fallbackScale = compact ? 0.45 : 0.58;
+                const horizontalGap = compact ? 10 : 16;
+                const rowGap = compact ? 6 : 12;
+
+                // A loose row pack is the last-resort layout. It keeps every label
+                // readable and adds staggered jitter without returning to a rigid grid.
+                entries.forEach((entry) => {
+                    entry.word.style.left = '0px';
+                    entry.word.style.top = '0px';
+                    entry.word.style.transform = 'none';
+                    entry.word.style.fontSize = Math.round(Math.max(minFont, entry.fontSize * fallbackScale)) + 'px';
+                });
+
+                const rows = [];
+                entries.forEach((entry) => {
+                    const rect = entry.word.getBoundingClientRect();
+                    let row = rows[rows.length - 1];
+                    const nextWidth = row ? row.width + horizontalGap + rect.width : rect.width;
+                    if (!row || nextWidth > width - padding * 2) {
+                        row = { items: [], width: 0, height: 0 };
+                        rows.push(row);
+                    }
+                    row.items.push({ entry, rect });
+                    row.width += (row.items.length > 1 ? horizontalGap : 0) + rect.width;
+                    row.height = Math.max(row.height, rect.height);
+                });
+
+                const requiredHeight = padding * 2 + rows.reduce((total, row) => total + row.height, 0) + rowGap * Math.max(0, rows.length - 1);
+                const fallbackHeight = Math.max(height, requiredHeight);
+                if (fallbackHeight > height) stage.style.minHeight = fallbackHeight + 'px';
+                let rowTop = padding;
+                rows.forEach((row, rowIndex) => {
+                    const stagger = rowIndex % 2 ? Math.min(12, horizontalGap / 2) : 0;
+                    let cursor = clamp((width - row.width) / 2 + stagger, padding, width - padding - row.width);
+                    row.items.forEach(({ entry, rect }) => {
+                        const jitterX = (((entry.hash >>> 5) % 1000) / 1000 - 0.5) * Math.min(4, horizontalGap * 0.35);
+                        const jitterY = (((entry.hash >>> 17) % 1000) / 1000 - 0.5) * Math.min(3, rowGap * 0.35);
+                        const x = clamp(cursor + rect.width / 2 + jitterX, padding + rect.width / 2, width - padding - rect.width / 2);
+                        const y = rowTop + row.height / 2 + jitterY;
+                        entry.word.style.left = x - rect.width / 2 + 'px';
+                        entry.word.style.top = y - rect.height / 2 + 'px';
+                        entry.word.style.transform = 'none';
+                        entry.word.style.zIndex = String(2 + Math.min(8, entry.count));
+                        const badge = entry.word.querySelector('small');
+                        if (badge) badge.style.transform = 'translateX(-50%)';
+                        cursor += rect.width + horizontalGap;
+                    });
+                    rowTop += row.height + rowGap;
+                });
+                cloud.classList.add('is-packed', 'is-fallback');
+                cloud.classList.remove('is-packing');
             } else {
                 cloud.classList.add('is-packed');
             }

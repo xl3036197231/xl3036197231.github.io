@@ -108,7 +108,7 @@
 
 .category-cloud-stage {
     position: relative;
-    min-height: clamp(420px, 40vw, 480px);
+    min-height: clamp(500px, 47vw, 620px);
     overflow: hidden;
     border: 1px solid color-mix(in srgb, var(--border) 76%, transparent);
     border-radius: 14px;
@@ -255,7 +255,7 @@ a.category-word:focus-visible small {
 
 @media (max-width: 720px) {
     .category-cloud-stage {
-        min-height: clamp(460px, 125vw, 500px);
+        min-height: clamp(520px, 145vw, 640px);
         border-radius: 12px;
     }
 
@@ -268,6 +268,27 @@ a.category-word:focus-visible small {
 @media (prefers-reduced-motion: reduce) {
     .category-word {
         transition: none;
+    }
+}
+
+/* Display MathJax blocks without clipping wide equations on small screens. */
+mjx-container {
+    max-width: 100%;
+    color: var(--primary);
+}
+
+mjx-container[display="true"] {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.65em 0;
+    scrollbar-width: thin;
+}
+
+@media (max-width: 720px) {
+    mjx-container[display="true"] {
+        font-size: 94%;
     }
 }
 
