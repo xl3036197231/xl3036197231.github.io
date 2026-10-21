@@ -81,7 +81,7 @@
 {{- $class = "post-entry tag-entry" }}
 {{- end }}
 
-<article class="{{ $class }}">
+<article class="{{ $class }}" data-reveal>
   {{- $isHidden := (.Param "cover.hiddenInList") | default (.Param "cover.hidden") | default false }}
   {{- partial "cover.html" (dict "cxt" . "IsSingle" false "isHidden" $isHidden) }}
   <header class="entry-header">
@@ -100,6 +100,13 @@
   {{- if not (.Param "hideMeta") }}
   <div class="entry-meta-line" aria-label="文章信息">
     {{- partial "entry_meta.html" . -}}
+  </div>
+  {{- end }}
+  {{- with .Params.tags }}
+  <div class="entry-tags" aria-label="文章标签">
+    {{- range first 4 . }}
+    <a class="entry-tag-chip" href="{{ printf "/tags/%s/" (urlize .) | relLangURL }}">#{{ . }}</a>
+    {{- end }}
   </div>
   {{- end }}
   {{- if (ne (.Param "hideSummary") true) }}

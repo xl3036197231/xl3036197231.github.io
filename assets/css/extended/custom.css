@@ -4487,3 +4487,555 @@ body:has(.fuwari-banner) .home-layout {
         animation: none;
     }
 }
+
+
+/* Fuwari-inspired second pass: tags, archive timeline, and tactile navigation. */
+.archive-page-header {
+    padding-bottom: clamp(30px, 4vw, 54px);
+}
+
+.archive-header-row {
+    display: flex;
+    min-width: 0;
+    gap: 28px clamp(36px, 8vw, 120px);
+    align-items: end;
+    justify-content: space-between;
+}
+
+.archive-header-row .post-description {
+    margin: 0;
+}
+
+.archive-total {
+    display: flex;
+    flex: 0 0 auto;
+    min-width: 118px;
+    padding-left: 24px;
+    border-left: 2px solid var(--border);
+    color: var(--secondary);
+    flex-direction: column;
+    gap: 4px;
+}
+
+.archive-total strong {
+    color: var(--primary);
+    font-family: var(--heading-font);
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: var(--heading-weight);
+    line-height: .9;
+}
+
+.archive-total span,
+.archive-year-count {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .08em;
+}
+
+.archive-timeline {
+    position: relative;
+    margin-top: clamp(36px, 6vw, 72px);
+}
+
+.archive-timeline::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: clamp(112px, 15vw, 176px);
+    width: 1px;
+    content: "";
+    background: repeating-linear-gradient(to bottom, var(--border) 0 6px, transparent 6px 13px);
+    pointer-events: none;
+}
+
+.archive-timeline-year {
+    display: grid;
+    position: relative;
+    grid-template-columns: clamp(104px, 15vw, 168px) minmax(0, 1fr);
+    gap: clamp(22px, 4vw, 48px);
+    padding: 0 0 clamp(50px, 7vw, 84px);
+}
+
+.archive-timeline-year + .archive-timeline-year {
+    padding-top: clamp(14px, 3vw, 32px);
+}
+
+.archive-timeline-year-heading {
+    display: flex;
+    position: sticky;
+    z-index: 2;
+    top: calc(var(--header-height) + 24px);
+    height: fit-content;
+    padding: 8px 0;
+    background: color-mix(in srgb, var(--theme) 82%, transparent);
+    flex-direction: column;
+    gap: 10px;
+}
+
+.archive-timeline-year-heading .caps-label {
+    color: var(--accent);
+}
+
+.archive-timeline-year-heading h2 {
+    margin: 0;
+    color: var(--primary);
+    font-family: var(--heading-font);
+    font-size: clamp(38px, 5vw, 66px);
+    font-weight: var(--heading-weight);
+    line-height: .9;
+    letter-spacing: -.05em;
+}
+
+.archive-timeline-year-heading .archive-year-count {
+    color: var(--secondary);
+}
+
+.archive-timeline-list {
+    display: grid;
+    position: relative;
+    gap: 8px;
+}
+
+.archive-timeline-entry {
+    display: grid;
+    position: relative;
+    min-width: 0;
+    min-height: 76px;
+    padding: 16px 14px 16px 0;
+    grid-template-columns: 58px 34px minmax(0, 1fr) 28px;
+    align-items: center;
+    border-radius: 12px;
+    color: var(--secondary);
+    transition: color 180ms ease, background 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.archive-timeline-entry::after,
+.tag-directory li::after {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    content: "";
+    opacity: 0;
+    border-radius: inherit;
+    background: radial-gradient(220px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), color-mix(in srgb, var(--template-cyan) 13%, transparent), transparent 72%);
+    transition: opacity 180ms ease;
+    pointer-events: none;
+}
+
+.archive-timeline-entry:hover,
+.archive-timeline-entry:focus-visible {
+    color: var(--primary);
+    background: color-mix(in srgb, var(--entry) 76%, transparent);
+    box-shadow: 0 12px 28px color-mix(in srgb, var(--template-blue) 8%, transparent);
+}
+
+.archive-timeline-entry:hover::after,
+.archive-timeline-entry:focus-visible::after,
+.tag-directory li:hover::after,
+.tag-directory li:focus-within::after {
+    opacity: 1;
+}
+
+.archive-timeline-entry time {
+    color: var(--secondary);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+.archive-timeline-marker {
+    display: block;
+    position: relative;
+    z-index: 1;
+    width: 8px;
+    height: 8px;
+    margin: 0 auto;
+    border: 2px solid var(--theme);
+    border-radius: 50%;
+    background: var(--template-blue);
+    box-shadow: 0 0 0 1px var(--template-blue), 0 0 0 5px color-mix(in srgb, var(--entry) 72%, transparent);
+    transition: width 180ms ease, height 180ms ease, background 180ms ease;
+}
+
+.archive-timeline-entry:hover .archive-timeline-marker,
+.archive-timeline-entry:focus-visible .archive-timeline-marker {
+    width: 14px;
+    height: 14px;
+    background: var(--accent);
+}
+
+.archive-timeline-entry-body {
+    display: grid;
+    min-width: 0;
+    gap: 8px;
+}
+
+.archive-timeline-entry-body strong {
+    overflow: hidden;
+    color: var(--primary);
+    font-family: var(--heading-font);
+    font-size: clamp(15px, 1.8vw, 20px);
+    font-weight: var(--heading-weight);
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.archive-timeline-entry-meta,
+.archive-timeline-tags {
+    display: flex;
+    min-width: 0;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.archive-timeline-entry-meta {
+    font-size: 11px;
+}
+
+.archive-timeline-category,
+.archive-timeline-tags span {
+    display: inline-flex;
+    min-height: 22px;
+    padding: 0 8px;
+    border-radius: 999px;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.archive-timeline-category {
+    color: var(--template-blue);
+    background: color-mix(in srgb, var(--template-blue) 11%, transparent);
+}
+
+.archive-timeline-tags {
+    color: var(--secondary);
+}
+
+.archive-timeline-tags span {
+    padding: 0;
+}
+
+.archive-timeline-arrow {
+    color: var(--secondary);
+    font-size: 20px;
+    text-align: right;
+    transition: color 180ms ease, transform 180ms ease;
+}
+
+.archive-timeline-entry:hover .archive-timeline-arrow,
+.archive-timeline-entry:focus-visible .archive-timeline-arrow {
+    color: var(--accent);
+    transform: translate(2px, -2px);
+}
+
+.entry-tags {
+    display: flex;
+    position: relative;
+    z-index: 3;
+    min-width: 0;
+    margin-top: 16px;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.entry-tag-chip,
+.post-header-tags a,
+.post-tags a {
+    display: inline-flex;
+    min-height: 28px;
+    padding: 0 10px;
+    color: var(--template-blue);
+    border: 1px solid color-mix(in srgb, var(--template-blue) 24%, var(--border));
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--template-blue) 7%, transparent);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    align-items: center;
+    transition: color 160ms ease, background 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.entry-tag-chip:hover,
+.entry-tag-chip:focus-visible,
+.post-header-tags a:hover,
+.post-header-tags a:focus-visible,
+.post-tags a:hover,
+.post-tags a:focus-visible {
+    color: var(--template-button-ink);
+    border-color: var(--template-blue);
+    background: var(--template-blue);
+}
+
+.entry-tag-chip:active,
+.post-header-tags a:active,
+.post-tags a:active {
+    transform: scale(.96);
+}
+
+.post-header-context {
+    display: flex;
+    min-width: 0;
+    margin-top: 22px;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.post-category-pill {
+    display: inline-flex;
+    min-height: 30px;
+    padding: 0 12px;
+    color: var(--template-button-ink);
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--template-blue), var(--template-violet));
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    align-items: center;
+}
+
+.post-header-tags {
+    display: flex;
+    min-width: 0;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.post-progress {
+    position: fixed;
+    z-index: 101;
+    top: 0;
+    left: 0;
+    width: var(--progress, 0%);
+    height: 3px;
+    background: linear-gradient(90deg, var(--template-blue), var(--template-violet), var(--accent));
+    box-shadow: 0 0 14px color-mix(in srgb, var(--template-blue) 56%, transparent);
+    pointer-events: none;
+    transition: width 100ms linear;
+}
+
+.ripple-host {
+    position: relative;
+    overflow: hidden;
+}
+
+.interaction-ripple {
+    position: absolute;
+    z-index: 4;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--template-cyan) 24%, transparent);
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;
+    animation: interaction-ripple 480ms ease-out forwards;
+}
+
+.is-pressing {
+    transform: scale(.99);
+}
+
+.hero-button.is-pressing,
+.fuwari-banner-action.is-pressing {
+    transform: translateY(1px) scale(.97);
+}
+
+.has-motion-js .archive-timeline-year[data-reveal],
+.has-motion-js .tag-directory li[data-reveal],
+.has-motion-js .post-entry[data-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 420ms ease, transform 420ms ease;
+}
+
+.has-motion-js .archive-timeline-year[data-reveal].is-visible,
+.has-motion-js .tag-directory li[data-reveal].is-visible,
+.has-motion-js .post-entry[data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+.post-entry .entry-tags {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.post-entry .entry-content {
+    grid-row: 4;
+}
+
+.post-entry .entry-footer {
+    grid-row: 2 / span 3;
+}
+
+.tag-directory li {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: linear-gradient(145deg, color-mix(in srgb, var(--entry) 86%, transparent), color-mix(in srgb, var(--template-blue) 3%, transparent));
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.tag-directory li:hover,
+.tag-directory li:focus-within {
+    border-color: color-mix(in srgb, var(--template-blue) 48%, var(--border));
+    box-shadow: 0 14px 30px color-mix(in srgb, var(--template-blue) 8%, transparent);
+    transform: translateY(-2px);
+}
+
+.tag-directory .term-name {
+    font-size: clamp(24px, 3vw, 38px);
+}
+
+.tag-directory .term-name::before {
+    content: "#";
+    color: var(--accent);
+    font-family: var(--body-font);
+    font-size: .58em;
+    font-weight: 700;
+    vertical-align: .16em;
+}
+
+@keyframes interaction-ripple {
+    0% { opacity: .55; transform: translate(-50%, -50%) scale(0); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(22); }
+}
+
+@media (max-width: 760px) {
+    .archive-header-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .archive-total {
+        min-width: 0;
+        padding-top: 12px;
+        padding-left: 0;
+        border-top: 1px solid var(--border);
+        border-left: 0;
+        flex-direction: row;
+        align-items: baseline;
+    }
+
+    .archive-timeline::before {
+        left: 76px;
+    }
+
+    .archive-timeline-year {
+        grid-template-columns: 66px minmax(0, 1fr);
+        gap: 28px;
+    }
+
+    .archive-timeline-year-heading {
+        top: calc(var(--header-height) + 12px);
+    }
+
+    .archive-timeline-year-heading h2 {
+        font-size: 34px;
+    }
+
+    .archive-timeline-entry {
+        grid-template-columns: 46px 24px minmax(0, 1fr) 20px;
+        padding-right: 8px;
+    }
+
+    .archive-timeline-entry-body strong {
+        white-space: normal;
+    }
+
+    .archive-timeline-tags {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .archive-timeline::before {
+        left: 66px;
+    }
+
+    .archive-timeline-year {
+        grid-template-columns: 58px minmax(0, 1fr);
+        gap: 22px;
+    }
+
+    .archive-timeline-entry {
+        grid-template-columns: 38px 22px minmax(0, 1fr) 16px;
+        min-height: 72px;
+    }
+
+    .archive-timeline-entry time {
+        font-size: 11px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .post-progress {
+        transition: none;
+    }
+
+    .interaction-ripple {
+        display: none;
+    }
+
+    .archive-timeline-entry,
+    .tag-directory li,
+    .is-pressing,
+    .hero-button.is-pressing,
+    .fuwari-banner-action.is-pressing {
+        transform: none;
+    }
+}
+
+
+@media (max-width: 760px) {
+    .archive-timeline-year-heading .caps-label {
+        width: max-content;
+        font-size: 9px;
+        letter-spacing: .08em;
+        white-space: nowrap;
+    }
+
+    .archive-timeline-year-heading h2 {
+        font-size: 28px;
+        white-space: nowrap;
+    }
+}
+
+
+/* Keep the full navigation usable on narrow screens instead of exposing a horizontal scroller. */
+@media (max-width: 760px) {
+    .header-nav {
+        overflow: visible;
+    }
+
+    .menu {
+        display: grid;
+        width: 100%;
+        padding-bottom: 10px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 2px;
+        overflow: visible;
+    }
+
+    .menu li,
+    .menu a {
+        min-width: 0;
+    }
+
+    .menu a {
+        display: flex;
+        padding: 0 4px;
+        justify-content: center;
+        font-size: 12px;
+        line-height: 44px;
+        white-space: nowrap;
+    }
+
+    .menu a::after {
+        right: 8px;
+        bottom: 3px;
+        left: 8px;
+    }
+}

@@ -53,7 +53,7 @@
                 {{- if eq (lower .) (lower $name) }}{{ $tagCategory = $groupCategory }}{{ end }}
             {{- end }}
         {{- end }}
-    <li data-tag-name="{{ $name }}" data-tag-category="{{ $tagCategory }}">
+    <li data-tag-name="{{ $name }}" data-tag-category="{{ $tagCategory }}" data-reveal>
         <a href="{{ printf "/%s/%s/" $type (urlize $name) | relLangURL }}">
             <span class="term-name">{{ $termPage.LinkTitle }}</span>
             {{- if eq $type "tags" }}<span class="tag-category-badge">{{ $tagCategory }}</span>{{ end }}

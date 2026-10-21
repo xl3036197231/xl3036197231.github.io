@@ -1,0 +1,67 @@
+{{- define "main" }}
+
+{{- $pages := where site.RegularPages "Type" "in" site.Params.mainSections -}}
+{{- if site.Params.ShowAllPagesInArchive }}
+{{- $pages = site.RegularPages }}
+{{- end }}
+{{- $total := len $pages -}}
+
+<header class="page-header archive-page-header">
+  <p class="page-eyebrow caps-label">INDEX / ARCHIVE</p>
+  <h1>{{ .Title }}</h1>
+  <div class="archive-header-row">
+    <p class="post-description">按年份整理每一次记录，沿着时间线回到文章发生的现场。</p>
+    <div class="archive-total" aria-label="文章总数">
+      <strong>{{ $total }}</strong>
+      <span>篇文章</span>
+    </div>
+  </div>
+</header>
+
+{{- if gt $total 0 }}
+<section class="archive-timeline" aria-label="文章时间线">
+  {{- range $pages.GroupByPublishDate "2006" }}
+  {{- if ne .Key "0001" }}
+  <section class="archive-timeline-year" id="archive-{{ .Key }}" data-reveal>
+    <header class="archive-timeline-year-heading">
+      <div>
+        <span class="caps-label">YEAR / {{ .Key }}</span>
+        <h2>{{ .Key }}</h2>
+      </div>
+      <span class="archive-year-count">{{ len .Pages }} 篇</span>
+    </header>
+    <div class="archive-timeline-list">
+      {{- range .Pages }}
+      {{- if eq .Kind "page" }}
+      <a class="archive-timeline-entry" data-ripple href="{{ .RelPermalink }}" aria-label="{{ .Title | plainify }}">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "01-02" }}</time>
+        <span class="archive-timeline-marker" aria-hidden="true"></span>
+        <span class="archive-timeline-entry-body">
+          <strong>{{ .Title }}</strong>
+          <span class="archive-timeline-entry-meta">
+            {{- with .Params.categories }}<span class="archive-timeline-category">{{ index . 0 }}</span>{{ end -}}
+            {{- with .Params.tags }}
+            <span class="archive-timeline-tags">
+              {{- range first 3 . }}<span>#{{ . }}</span>{{ end -}}
+            </span>
+            {{- end }}
+          </span>
+        </span>
+        <span class="archive-timeline-arrow" aria-hidden="true">↗</span>
+      </a>
+      {{- end }}
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+  {{- end }}
+</section>
+{{- else }}
+<section class="empty-state" aria-labelledby="archive-empty-title">
+  <p class="empty-state-index caps-label">NO / ENTRIES YET</p>
+  <h2 id="archive-empty-title">时间线还是空的。</h2>
+  <a class="hero-button hero-button-secondary" href="{{ "/posts/" | relLangURL }}">先去写一篇 <span aria-hidden="true">→</span></a>
+</section>
+{{- end }}
+
+{{- end }}
