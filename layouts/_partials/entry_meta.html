@@ -1,7 +1,17 @@
 {{- if not .Date.IsZero -}}
 <time datetime="{{ .Date.Format "2006-01-02" }}">发布于 {{ .Date | time.Format (default "2006.01.02" site.Params.DateFormat) }}</time>
 {{- end -}}
+{{- with .Params.categories -}}
+{{- range first 1 . -}}
+<a class="entry-category" href="{{ printf "/categories/%s/" (urlize .) | relLangURL }}">{{ . }}</a>
+{{- end -}}
+{{- end -}}
+{{- if site.Params.ShowWordCount -}}
 <span>全文 {{ .WordCount }} 字</span>
+{{- end -}}
+{{- if site.Params.ShowReadingTime -}}
+<span>{{ .ReadingTime }} 分钟阅读</span>
+{{- end -}}
 {{- with (partial "author.html" .) }}
 <span>作者 {{ . }}</span>
 {{- end -}}

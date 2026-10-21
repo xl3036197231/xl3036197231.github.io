@@ -1,0 +1,17 @@
+<section class="fuwari-banner" aria-labelledby="fuwari-banner-title">
+    <img src="{{ "/images/fuwari-window.jpeg" | relURL }}" alt="绿色窗台上的黄色小角色与咖啡" width="886" height="886" loading="eager" decoding="async">
+    <div class="fuwari-banner-shade" aria-hidden="true"></div>
+    <div class="fuwari-banner-copy">
+        <span class="caps-label">XIAOXING / DIGITAL GARDEN</span>
+        <h1 id="fuwari-banner-title">在代码与生活之间<br><em>保持好奇</em></h1>
+        <p>学业、靶机、CTF、科研与生活随记，持续整理成自己的知识花园。</p>
+        <div class="fuwari-banner-actions">
+            <a class="fuwari-banner-action" href="{{ "/posts/" | relLangURL }}">浏览文章 <span aria-hidden="true">↗</span></a>
+            <span class="fuwari-banner-stats">{{ len (where site.RegularPages "Section" "posts") }} 篇记录 · {{ now.Format "2006" }}</span>
+        </div>
+    </div>
+    <div class="fuwari-banner-mark" aria-hidden="true">
+        <span>01</span>
+        <span>READ / MAKE / WRITE</span>
+    </div>
+</section>

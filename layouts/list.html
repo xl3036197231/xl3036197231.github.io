@@ -57,6 +57,10 @@
 {{- $homeShell := and .IsHome site.Params.homeInfoParams (eq $paginator.PageNumber 1) }}
 {{- $editorialShell := or $homeShell (and (not .IsHome) (or (eq .Kind "section") (eq .Kind "term") (eq .Kind "taxonomy"))) }}
 
+{{- if $homeShell }}
+{{- partial "home_banner.html" . }}
+{{- end }}
+
 {{- if $editorialShell }}
 <div class="home-layout">
   <div class="home-main">
