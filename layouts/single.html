@@ -3,85 +3,115 @@
 {{- $isLifeNote := and (eq .Kind "page") (in (.Params.categories | default (slice)) "生活随记") }}
 <div class="post-progress" role="progressbar" aria-label="文章阅读进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
 <article class="post-single{{ if $isLifeNote }} life-note-article{{ end }}">
-  <header class="post-header">
-    {{ partial "breadcrumbs.html" . }}
-    <h1 class="post-title entry-hint-parent">
-      {{ .Title }}
-      {{- if .Draft }}
-      <span class="entry-hint" title="Draft">
-        <svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" fill="currentColor">
-          <path
-            d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
-        </svg>
-      </span>
-      {{- end }}
-    </h1>
-    {{- if .Description }}
-    <div class="post-description">
-      {{ .Description }}
-    </div>
-    {{- end }}
-    {{- with .Params.categories }}
-    <div class="post-header-context">
-      <a class="post-category-pill" href="{{ printf "/categories/%s/" (urlize (index . 0)) | relLangURL }}">
-        {{ index . 0 }}
-      </a>
-      {{- with $.Params.tags }}
-      <div class="post-header-tags" aria-label="文章标签">
-        {{- range first 4 . }}
-        <a href="{{ printf "/tags/%s/" (urlize .) | relLangURL }}">#{{ . }}</a>
-        {{- end }}
-      </div>
-      {{- end }}
-    </div>
-    {{- end }}
-    {{- if not (.Param "hideMeta") }}
-    <div class="post-meta">
-      {{- partial "post_meta.html" . -}}
-      {{- partial "translation_list.html" . -}}
-      {{- partial "edit_post.html" . -}}
-      {{- partial "post_canonical.html" . -}}
-    </div>
-    {{- end }}
-  </header>
-
   <div class="post-reading-grid">
     <aside class="post-toc-column">
       {{- partial "toc.html" . -}}
     </aside>
 
     <div class="post-reading-column">
-      {{- $isHidden := (.Param "cover.hiddenInSingle") | default (.Param "cover.hidden") | default false }}
-      {{- partial "cover.html" (dict "cxt" . "IsSingle" true "isHidden" $isHidden) }}
+      <div class="post-article-card">
+        <header class="post-header">
+          {{ partial "breadcrumbs.html" . }}
 
-      {{- if .Content }}
-      <div class="post-content md-content">
-        {{- if not (.Param "disableAnchoredHeadings") }}
-        {{- partial "anchored_headings.html" .Content -}}
-        {{- else }}{{ .Content }}{{ end }}
-      </div>
-      {{- end }}
-
-      {{- partial "extend_post_content.html" . }}
-
-      <footer class="post-footer">
-        {{- $tags := .Language.Params.Taxonomies.tag | default "tags" }}
-        <ul class="post-tags">
-          {{- range ($.GetTerms $tags) }}
-          <li><a href="{{ .Permalink }}">{{ .LinkTitle }}</a></li>
+          {{- if or site.Params.ShowWordCount site.Params.ShowReadingTime }}
+          <div class="post-stats" aria-label="文章统计">
+            {{- if site.Params.ShowWordCount }}
+            <span class="post-stat">
+              <span class="post-stat-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 3.75h9.5L19 7.25v13H6z" />
+                  <path d="M15.5 3.75v3.5H19M9 11h6M9 15h6" />
+                </svg>
+              </span>
+              <span>{{ .WordCount }} 字</span>
+            </span>
+            {{- end }}
+            {{- if site.Params.ShowReadingTime }}
+            <span class="post-stat">
+              <span class="post-stat-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="8.5" />
+                  <path d="M12 7v5l3.2 2" />
+                </svg>
+              </span>
+              <span>{{ .ReadingTime }} 分钟阅读</span>
+            </span>
+            {{- end }}
+          </div>
           {{- end }}
-        </ul>
-        {{- if (.Param "ShowPostNavLinks") }}
-        {{- partial "post_nav_links.html" . }}
-        {{- end }}
-        {{- if (and site.Params.ShowShareButtons (ne .Params.disableShare true)) }}
-        {{- partial "share_icons.html" . -}}
-        {{- end }}
-      </footer>
 
-      {{- if (.Param "comments") }}
-      {{- partial "comments.html" . }}
-      {{- end }}
+          <h1 class="post-title entry-hint-parent">
+            {{ .Title }}
+            {{- if .Draft }}
+            <span class="entry-hint" title="Draft">
+              <svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" fill="currentColor">
+                <path
+                  d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
+              </svg>
+            </span>
+            {{- end }}
+          </h1>
+          {{- if .Description }}
+          <div class="post-description">
+            {{ .Description }}
+          </div>
+          {{- end }}
+          {{- with .Params.categories }}
+          <div class="post-header-context">
+            <a class="post-category-pill" href="{{ printf "/categories/%s/" (urlize (index . 0)) | relLangURL }}">
+              {{ index . 0 }}
+            </a>
+            {{- with $.Params.tags }}
+            <div class="post-header-tags" aria-label="文章标签">
+              {{- range first 4 . }}
+              <a href="{{ printf "/tags/%s/" (urlize .) | relLangURL }}">#{{ . }}</a>
+              {{- end }}
+            </div>
+            {{- end }}
+          </div>
+          {{- end }}
+          {{- if not (.Param "hideMeta") }}
+          <div class="post-meta">
+            {{- partial "post_meta.html" . -}}
+            {{- partial "translation_list.html" . -}}
+            {{- partial "edit_post.html" . -}}
+            {{- partial "post_canonical.html" . -}}
+          </div>
+          {{- end }}
+        </header>
+
+        {{- $isHidden := (.Param "cover.hiddenInSingle") | default (.Param "cover.hidden") | default false }}
+        {{- partial "cover.html" (dict "cxt" . "IsSingle" true "isHidden" $isHidden) }}
+
+        {{- if .Content }}
+        <div class="post-content md-content">
+          {{- if not (.Param "disableAnchoredHeadings") }}
+          {{- partial "anchored_headings.html" .Content -}}
+          {{- else }}{{ .Content }}{{ end }}
+        </div>
+        {{- end }}
+
+        {{- partial "extend_post_content.html" . }}
+
+        <footer class="post-footer">
+          {{- $tags := .Language.Params.Taxonomies.tag | default "tags" }}
+          <ul class="post-tags">
+            {{- range ($.GetTerms $tags) }}
+            <li><a href="{{ .Permalink }}">{{ .LinkTitle }}</a></li>
+            {{- end }}
+          </ul>
+          {{- if (.Param "ShowPostNavLinks") }}
+          {{- partial "post_nav_links.html" . }}
+          {{- end }}
+          {{- if (and site.Params.ShowShareButtons (ne .Params.disableShare true)) }}
+          {{- partial "share_icons.html" . -}}
+          {{- end }}
+        </footer>
+
+        {{- if (.Param "comments") }}
+        {{- partial "comments.html" . }}
+        {{- end }}
+      </div>
     </div>
   </div>
 </article>
