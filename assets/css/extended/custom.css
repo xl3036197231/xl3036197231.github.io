@@ -1,3 +1,7 @@
+@import url("https://cdn.jsdelivr.net/npm/@fontsource/roboto@5.1.1/400.css");
+@import url("https://cdn.jsdelivr.net/npm/@fontsource/roboto@5.1.1/500.css");
+@import url("https://cdn.jsdelivr.net/npm/@fontsource/roboto@5.1.1/700.css");
+
 /* Xiaoxing editorial system — generated from design-system/xiaoxing/MASTER.md */
 @font-face {
     font-family: "Libre Bodoni";
@@ -75,13 +79,13 @@
     --accent-ink: #ffffff;
     --spectrum: #7c3aed;
     --display-font: "Libre Bodoni", "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, serif;
-    --heading-font: "Nacelle", "Public Sans", "Noto Sans CJK SC", "Noto Sans SC", "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+    --heading-font: "Roboto", "Nacelle", "Public Sans", "Noto Sans CJK SC", "Noto Sans SC", "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
     --heading-weight: 600;
     --template-blue: #4f46e5;
     --template-violet: #7c3aed;
     --template-cyan: #0284c7;
     --template-button-ink: #ffffff;
-    --body-font: "Public Sans", "Noto Sans CJK SC", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    --body-font: "Roboto", "Public Sans", "Noto Sans CJK SC", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
     color-scheme: light;
 }
 
@@ -3880,7 +3884,7 @@ html[data-theme="dark"] .hero-title-variant.title-night {
 
 /* Keep card hierarchy explicit: title, metadata row, then summary. */
 .post-entry {
-    grid-template-rows: auto auto auto 1fr;
+    grid-template-rows: auto auto auto auto 1fr;
 }
 
 .post-entry .entry-header,
@@ -3905,8 +3909,8 @@ html[data-theme="dark"] .hero-title-variant.title-night {
 .entry-meta-line {
     display: flex;
     min-width: 0;
-    flex-wrap: nowrap;
-    align-items: center;
+    flex-wrap: wrap;
+    align-items: flex-start;
     gap: 14px;
     margin-top: 11px;
     color: var(--secondary);
@@ -3945,7 +3949,7 @@ html[data-theme="dark"] .hero-title-variant.title-night {
 
 @media (max-width: 760px) {
     .post-entry {
-        grid-template-rows: auto auto auto 1fr auto;
+        grid-template-rows: auto auto auto auto 1fr auto;
     }
 
     .entry-meta-line {
@@ -3964,7 +3968,7 @@ html[data-theme="dark"] .hero-title-variant.title-night {
     }
 
     .post-entry .entry-footer {
-        grid-row: 5;
+        grid-row: 6;
     }
 }
 
@@ -4754,6 +4758,8 @@ body:has(.fuwari-banner) .home-layout {
     font-weight: 700;
     letter-spacing: .02em;
     align-items: center;
+    white-space: nowrap;
+    max-width: 100%;
     transition: color 160ms ease, background 160ms ease, border-color 160ms ease, transform 160ms ease;
 }
 
@@ -4859,15 +4865,15 @@ body:has(.fuwari-banner) .home-layout {
 
 .post-entry .entry-tags {
     grid-column: 1;
-    grid-row: 3;
-}
-
-.post-entry .entry-content {
     grid-row: 4;
 }
 
+.post-entry .entry-content {
+    grid-row: 5;
+}
+
 .post-entry .entry-footer {
-    grid-row: 2 / span 3;
+    grid-row: 2 / span 4;
 }
 
 .tag-directory li {
