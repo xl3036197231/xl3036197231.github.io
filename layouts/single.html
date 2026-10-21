@@ -56,23 +56,9 @@
             {{ .Description }}
           </div>
           {{- end }}
-          {{- with .Params.categories }}
-          <div class="post-header-context">
-            <a class="post-category-pill" href="{{ printf "/categories/%s/" (urlize (index . 0)) | relLangURL }}">
-              {{ index . 0 }}
-            </a>
-            {{- with $.Params.tags }}
-            <div class="post-header-tags" aria-label="文章标签">
-              {{- range first 4 . }}
-              <a href="{{ printf "/tags/%s/" (urlize .) | relLangURL }}">#{{ . }}</a>
-              {{- end }}
-            </div>
-            {{- end }}
-          </div>
-          {{- end }}
           {{- if not (.Param "hideMeta") }}
-          <div class="post-meta">
-            {{- partial "post_meta.html" . -}}
+          {{- partial "post_article_meta.html" . -}}
+          <div class="post-meta-tools">
             {{- partial "translation_list.html" . -}}
             {{- partial "edit_post.html" . -}}
             {{- partial "post_canonical.html" . -}}
