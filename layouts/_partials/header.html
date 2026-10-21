@@ -95,6 +95,14 @@
             </div>
             {{- end }}
         </div>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" type="button" aria-controls="menu" aria-expanded="false" aria-label="打开导航菜单" title="打开导航菜单">
+            <svg class="mobile-menu-icon mobile-menu-icon-open" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <path d="M4 7h16M4 12h16M4 17h16"></path>
+            </svg>
+            <svg class="mobile-menu-icon mobile-menu-icon-close" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <path d="m6 6 12 12M18 6 6 18"></path>
+            </svg>
+        </button>
         {{- $currentPage := . }}
         <ul id="menu" class="menu">
             {{- range site.Menus.main }}
@@ -123,3 +131,38 @@
         </ul>
     </nav>
 </header>
+
+<script>
+(() => {
+    const nav = document.querySelector('.header-nav');
+    const toggle = document.getElementById('mobile-menu-toggle');
+    const menu = document.getElementById('menu');
+    if (!nav || !toggle || !menu) return;
+
+    const closeMenu = () => {
+        nav.classList.remove('is-menu-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', '打开导航菜单');
+        toggle.title = '打开导航菜单';
+    };
+
+    toggle.addEventListener('click', () => {
+        const open = nav.classList.toggle('is-menu-open');
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.setAttribute('aria-label', open ? '关闭导航菜单' : '打开导航菜单');
+        toggle.title = open ? '关闭导航菜单' : '打开导航菜单';
+    });
+    menu.addEventListener('click', (event) => {
+        if (event.target instanceof Element && event.target.closest('a')) closeMenu();
+    });
+    document.addEventListener('click', (event) => {
+        if (event.target instanceof Node && !nav.contains(event.target)) closeMenu();
+    });
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeMenu();
+    });
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 760) closeMenu();
+    }, { passive: true });
+})();
+</script>
