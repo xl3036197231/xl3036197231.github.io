@@ -40,7 +40,6 @@
     let pointerY = -1000;
     let pointerActive = false;
 
-    const isDark = () => root.dataset.theme === 'dark';
     const isEnabled = () => root.dataset.ambient !== 'off' && !motionQuery.matches;
     const clearCanvas = () => context.clearRect(0, 0, width, height);
 
@@ -55,37 +54,36 @@
     };
 
     const rebuildParticles = () => {
-        const night = isDark();
         const compact = width < 720;
-        const minimum = night ? (compact ? 16 : 28) : (compact ? 24 : 42);
-        const maximum = night ? (compact ? 34 : 62) : (compact ? 48 : 88);
-        const count = Math.min(maximum, Math.max(minimum, Math.round(width / (night ? 24 : 14))));
+        const minimum = compact ? 16 : 28;
+        const maximum = compact ? 34 : 62;
+        const count = Math.min(maximum, Math.max(minimum, Math.round(width / 24)));
 
         particles = Array.from({ length: count }, () => ({
             x: Math.random() * width,
             y: Math.random() * height,
-            radius: night ? Math.random() * 1.8 + 0.5 : Math.random() * 3.2 + 1.1,
-            speed: night ? Math.random() * 0.10 + 0.03 : Math.random() * 0.55 + 0.24,
+            radius: Math.random() * 1.8 + 0.5,
+            speed: Math.random() * 0.10 + 0.03,
             drift: Math.random() * 0.6 + 0.2,
             phase: Math.random() * Math.PI * 2,
-            alpha: night ? Math.random() * 0.48 + 0.22 : Math.random() * 0.32 + 0.24,
+            alpha: Math.random() * 0.48 + 0.22,
             velocityX: 0,
             velocityY: 0
         }));
     };
 
-    const repelFromPointer = (particle, night) => {
+    const repelFromPointer = (particle) => {
         if (!pointerActive) return;
 
         const distanceX = particle.x - pointerX;
         const distanceY = particle.y - pointerY;
         const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-        const radius = night ? 96 : 132;
+        const radius = 96;
 
         if (distance <= 0 || distance >= radius) return;
 
         const influence = 1 - distance / radius;
-        const impulse = influence * influence * (night ? 1.1 : 3.1);
+        const impulse = influence * influence * 1.1;
         particle.velocityX += distanceX / distance * impulse;
         particle.velocityY += distanceY / distance * impulse;
     };
@@ -126,14 +124,12 @@
         const delta = Math.min((time - lastTime) / 16.67 || 1, 2);
         lastTime = time;
         lastPaint = time;
-        const night = isDark();
-
         context.clearRect(0, 0, width, height);
 
         particles.forEach((particle) => {
             particle.y += particle.speed * delta;
             particle.x += Math.sin(time * 0.00045 + particle.phase) * particle.drift * delta;
-            repelFromPointer(particle, night);
+            repelFromPointer(particle);
             particle.x += particle.velocityX * delta;
             particle.y += particle.velocityY * delta;
             particle.velocityX *= Math.pow(0.87, delta);
@@ -151,18 +147,8 @@
                 particle.x = width + 16;
             }
 
-            const shimmer = night
-                ? particle.alpha * (0.72 + Math.sin(time * 0.0012 + particle.phase) * 0.28)
-                : particle.alpha;
-
-            if (night) {
-                context.beginPath();
-                context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-                context.fillStyle = 'rgba(226, 232, 240, ' + shimmer + ')';
-                context.fill();
-            } else {
-                drawSnowflake(particle, shimmer, time);
-            }
+            const shimmer = particle.alpha * (0.72 + Math.sin(time * 0.0012 + particle.phase) * 0.28);
+            drawSnowflake(particle, shimmer, time);
         });
     };
 
