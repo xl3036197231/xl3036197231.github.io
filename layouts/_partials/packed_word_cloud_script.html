@@ -267,7 +267,14 @@
             start();
         }
 
-        new ResizeObserver(() => scheduleLayout()).observe(stage);
+        const observeResize = (element, callback) => {
+            if ('ResizeObserver' in window) {
+                new ResizeObserver(callback).observe(element);
+            } else {
+                window.addEventListener('resize', callback, { passive: true });
+            }
+        };
+        observeResize(stage, () => scheduleLayout());
     });
 })();
 </script>

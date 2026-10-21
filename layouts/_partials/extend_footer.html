@@ -1004,7 +1004,14 @@
     resize();
     setBadge(currentIndex);
     start();
-    new ResizeObserver(resize).observe(chart);
+    const observeResize = (element, callback) => {
+        if ('ResizeObserver' in window) {
+            new ResizeObserver(callback).observe(element);
+        } else {
+            window.addEventListener('resize', callback, { passive: true });
+        }
+    };
+    observeResize(chart, resize);
     if ('IntersectionObserver' in window) {
         new IntersectionObserver((entries) => {
             isVisible = entries.some((entry) => entry.isIntersecting);
