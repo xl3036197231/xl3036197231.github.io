@@ -73,6 +73,10 @@
 {{- range $index, $page := $paginator.Pages }}
 
 {{- $class := "post-entry" }}
+{{- $postCardClass := "post-card" }}
+{{- if and $homeShell (eq $paginator.PageNumber 1) (eq $index 0) }}
+{{- $postCardClass = "post-card post-card-featured" }}
+{{- end }}
 
 {{- $user_preferred := or site.Params.disableSpecial1stPost site.Params.homeInfoParams }}
 {{- if (and $.IsHome (eq $paginator.PageNumber 1) (eq $index 0) (not $user_preferred)) }}
@@ -81,7 +85,7 @@
 {{- $class = "post-entry tag-entry" }}
 {{- end }}
 
-<article class="{{ $class }}" data-reveal>
+<article class="{{ $class }} {{ $postCardClass }}" data-reveal>
   {{- $isHidden := (.Param "cover.hiddenInList") | default (.Param "cover.hidden") | default false }}
   {{- partial "cover.html" (dict "cxt" . "IsSingle" false "isHidden" $isHidden) }}
   <header class="entry-header">

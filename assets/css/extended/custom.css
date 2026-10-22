@@ -5823,3 +5823,191 @@ body:has(.fuwari-banner) .home-layout {
         animation: none;
     }
 }
+/* Fuwari composition pass: overlap the main panel and give post cards a clear editorial rail. */
+body:has(.fuwari-banner) .home-layout {
+    position: relative;
+    z-index: 3;
+    margin-top: clamp(-132px, -9vw, -72px);
+    padding-top: 0;
+}
+
+body:has(.fuwari-banner) .home-main .editorial-hero {
+    border-top: 0;
+    border-radius: 24px;
+    background:
+        linear-gradient(135deg, color-mix(in srgb, var(--entry) 96%, transparent), color-mix(in srgb, var(--template-blue) 7%, transparent)),
+        var(--entry);
+    box-shadow: 0 28px 80px color-mix(in srgb, var(--shadow-color) 16%, transparent);
+}
+
+.home-main > .feed-heading {
+    position: relative;
+    padding-bottom: 18px;
+}
+
+.home-main > .feed-heading::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    content: "";
+    background: var(--fuwari-line-soft);
+}
+
+.post-card {
+    position: relative;
+    isolation: isolate;
+    grid-template-columns: minmax(0, 1fr) minmax(104px, 148px);
+    padding: clamp(24px, 3vw, 36px);
+}
+
+.post-card::before {
+    display: block;
+    margin-bottom: 14px;
+    grid-column: 1;
+    grid-row: 1;
+    color: var(--template-blue);
+    content: "NOTE / " counter(post-index, decimal-leading-zero);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+}
+
+.post-card-featured {
+    grid-template-columns: minmax(0, 1fr) minmax(132px, 196px);
+    min-height: 266px;
+    background:
+        radial-gradient(circle at 92% 16%, color-mix(in srgb, var(--template-blue) 18%, transparent), transparent 34%),
+        linear-gradient(135deg, color-mix(in srgb, var(--entry) 96%, transparent), color-mix(in srgb, var(--template-violet) 8%, transparent));
+}
+
+.post-card-featured::before {
+    color: var(--accent);
+    content: "LATEST / FEATURED";
+}
+
+.post-card-featured::after {
+    position: absolute;
+    z-index: -1;
+    right: -72px;
+    bottom: -86px;
+    width: 220px;
+    height: 220px;
+    content: "";
+    border: 1px solid color-mix(in srgb, var(--template-blue) 26%, transparent);
+    border-radius: 50%;
+    box-shadow:
+        0 0 0 18px color-mix(in srgb, var(--template-blue) 4%, transparent),
+        0 0 0 36px color-mix(in srgb, var(--template-violet) 4%, transparent);
+    pointer-events: none;
+}
+
+.post-card-featured .entry-header h2 {
+    font-size: clamp(30px, 3.2vw, 48px);
+}
+
+.post-card .entry-footer {
+    min-width: 0;
+    padding-left: 24px;
+    border-top: 0;
+    border-left: 1px dashed var(--fuwari-line-soft);
+    align-items: stretch;
+}
+
+.post-card .entry-meta-wrap {
+    width: 100%;
+    height: 100%;
+    align-items: stretch;
+    justify-content: space-between;
+}
+
+.post-card .entry-open-link {
+    width: 100%;
+    min-height: 100%;
+    padding: 4px 0 6px;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 0;
+}
+
+.post-card .entry-open-link span:first-child {
+    color: var(--fuwari-ink-50);
+    font-size: 10px;
+    letter-spacing: .14em;
+    writing-mode: vertical-rl;
+}
+
+.post-card .entry-open-link span:last-child {
+    color: var(--primary);
+    font-size: 34px;
+    line-height: 1;
+    transition: transform .24s cubic-bezier(.22, 1, .36, 1), color .2s ease;
+}
+
+.post-card:hover .entry-open-link span:last-child,
+.post-card:focus-within .entry-open-link span:last-child {
+    color: var(--accent);
+    transform: translate(4px, -4px);
+}
+
+@media (max-width: 760px) {
+    body:has(.fuwari-banner) .home-layout {
+        margin-top: -42px;
+    }
+
+    body:has(.fuwari-banner) .home-main .editorial-hero {
+        border-radius: 18px;
+    }
+
+    .home-main > .feed-heading {
+        padding-bottom: 14px;
+    }
+
+    .post-card,
+    .post-card-featured {
+        grid-template-columns: minmax(0, 1fr);
+        min-height: auto;
+        padding: 22px 18px;
+    }
+
+    .post-card-featured::after {
+        right: -108px;
+        bottom: -108px;
+    }
+
+    .post-card .entry-footer {
+        grid-column: 1;
+        grid-row: 6;
+        margin-top: 10px;
+        padding-top: 14px;
+        padding-left: 0;
+        border-top: 1px dashed var(--fuwari-line-soft);
+        border-left: 0;
+    }
+
+    .post-card .entry-open-link {
+        min-height: 44px;
+        padding: 0;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .post-card .entry-open-link span:first-child {
+        font-size: 11px;
+        writing-mode: horizontal-tb;
+    }
+
+    .post-card .entry-open-link span:last-child {
+        font-size: 28px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .post-card .entry-open-link span:last-child {
+        transition: none;
+    }
+}
