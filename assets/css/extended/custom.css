@@ -6011,3 +6011,86 @@ body:has(.fuwari-banner) .home-main .editorial-hero {
         transition: none;
     }
 }
+/* Compact hero copy: keep the identity cue, let the window image lead. */
+.fuwari-banner-copy {
+    bottom: clamp(96px, 10vh, 128px);
+    left: clamp(28px, 6vw, 88px);
+    max-width: min(540px, calc(100% - 56px));
+    gap: 7px;
+}
+
+.fuwari-banner-copy .caps-label {
+    font-size: 8px;
+    letter-spacing: .14em;
+}
+
+.fuwari-banner-copy h1 {
+    max-width: 540px;
+    font-size: clamp(30px, 3.5vw, 54px);
+    line-height: 1;
+    letter-spacing: -.025em;
+}
+
+.fuwari-banner-copy > p {
+    max-width: 420px;
+    font-size: clamp(14px, 1.15vw, 16px);
+    line-height: 1.5;
+}
+
+.fuwari-banner-actions {
+    gap: 10px;
+}
+
+.fuwari-banner-action {
+    min-height: 36px;
+    padding: 0 12px;
+    font-size: 12px;
+    gap: 10px;
+}
+
+.fuwari-banner-stats {
+    font-size: 11px;
+}
+
+@media (max-width: 900px) {
+    .fuwari-banner-copy {
+        bottom: 108px;
+        left: clamp(24px, 6vw, 58px);
+        max-width: min(500px, calc(100% - 48px));
+    }
+
+    .fuwari-banner-copy h1 {
+        font-size: clamp(30px, 7vw, 50px);
+    }
+}
+
+@media (max-width: 760px) {
+    .fuwari-banner-copy {
+        right: 22px;
+        bottom: 108px;
+        left: 22px;
+        max-width: none;
+    }
+
+    .fuwari-banner-copy h1 {
+        max-width: 430px;
+        font-size: clamp(28px, 8vw, 44px);
+    }
+
+    .fuwari-banner-copy > p {
+        max-width: 360px;
+        font-size: 15px;
+        line-height: 1.5;
+    }
+
+    .fuwari-banner-action {
+        min-height: 36px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fuwari-banner-copy h1,
+    .fuwari-banner-copy > p {
+        transition: none;
+    }
+}
